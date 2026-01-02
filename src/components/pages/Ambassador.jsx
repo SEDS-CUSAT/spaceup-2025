@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { StickyBanner } from "@/components/ui/sticky-banner";
+import Link from "next/link";
 
 const AMBASSADOR_URL = "https://spaceup-ambassador.sedscusat.com/";
 
@@ -11,7 +12,7 @@ const Ambassador = () => {
       showCloseButton={false}
       hideOnScroll={false}
     >
-      <a
+      <Link
         href={AMBASSADOR_URL}
         target="_blank"
         rel="noopener noreferrer"
@@ -20,7 +21,7 @@ const Ambassador = () => {
       >
         <span className="font-semibold hover:underline">Join as an Ambassador</span>
         <span className="opacity-90 text-sm hover:ring-1 ring-white p-2 rounded">Click Here →</span>
-      </a>
+      </Link>
     </StickyBanner>
   );
 };
