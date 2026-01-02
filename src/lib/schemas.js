@@ -16,10 +16,10 @@ export const registerSchema = z.object({
   upiTransactionId: z.string().min(4, "Transaction ID is required"),
   paymentScreenshot: z
     .any()
-    .refine((file) => file?.size <= MAX_FILE_SIZE, `Max file size is 2MB.`)
+    .refine((files) => files?.length > 0, "Payment screenshot is required.")
+    .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max file size is 2MB.`)
     .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type),
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
       "Only .jpg, .jpeg, .png and .webp formats are supported."
-    )
-    .optional(), // Optional here because on server we might handle it differently or it might be a FormData entry
+    ),
 });

@@ -32,7 +32,7 @@ export const FileUpload = ({
   const fileInputRef = useRef(null);
 
   const handleFileChange = (newFiles) => {
-    setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    setFiles(newFiles);
     onChange && onChange(newFiles);
   };
 
@@ -80,11 +80,18 @@ export const FileUpload = ({
                   key={"file" + idx}
                   layoutId={idx === 0 ? "file-upload" : "file-upload-" + idx}
                   className={cn(
-                    "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
+                    "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start p-4 mt-4 w-full mx-auto rounded-md",
                     "shadow-sm"
                   )}
                 >
                   <div className="flex justify-between w-full items-center gap-4">
+                    {file.type.startsWith("image/") && (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="h-16 w-16 object-cover rounded-md"
+                      />
+                    )}
                     <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
