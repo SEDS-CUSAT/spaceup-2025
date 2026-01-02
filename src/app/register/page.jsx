@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@/lib/schemas';
@@ -31,6 +31,14 @@ import { FloatingAstronaut } from "@/components/ui/floating-astronaut";
 export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  useEffect(() => {
+    const registered = localStorage.getItem('spaceup_registered');
+    if (registered === 'true') {
+      setIsRegistered(true);
+    }
+  }, []);
 
   const {
     register,
@@ -72,6 +80,8 @@ export default function RegisterPage() {
       const result = await registerUser(formData);
       if (result.success) {
         setSubmitMessage({ type: 'success', text: result.message });
+        localStorage.setItem('spaceup_registered', 'true');
+        setIsRegistered(true);
         reset();
       } else {
         setSubmitMessage({ type: 'error', text: result.message || 'Registration failed' });
@@ -85,6 +95,53 @@ export default function RegisterPage() {
       setIsSubmitting(false);
     }
   };
+
+  if (isRegistered) {
+    return (
+      <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative w-full overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 w-full h-full z-0">
+          <ShootingStars />
+          <StarsBackground />
+        </div>
+        <div className="absolute top-10 left-10 z-0 hidden lg:block opacity-80">
+           <FloatingAstronaut className="w-48 h-48" />
+        </div>
+        <div className="absolute bottom-10 right-10 z-0 hidden lg:block opacity-80 animation-delay-2000">
+           <FloatingAstronaut className="w-32 h-32 rotate-12" />
+        </div>
+        
+        <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)]">
+          <CardHeader className="space-y-1 text-center relative overflow-hidden rounded-t-xl">
+            <div className="absolute inset-0 bg-linear-to-r blur-xl"></div>
+            <CardTitle className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 relative z-10">
+              Registration Successful!
+            </CardTitle>
+            <CardDescription className="text-neutral-400 relative z-10 text-lg">
+              You have successfully registered for SpaceUp.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center space-y-6 py-8">
+            <div className="p-4 bg-green-500/10 text-green-400 border border-green-500/20 rounded-lg">
+              Thank you for registering!
+            </div>
+            <div className="space-y-4">
+              <p className="text-neutral-300">
+                Please join our official WhatsApp group for updates:
+              </p>
+              <a 
+                href="https://chat.whatsapp.com/Jr1Z36wxdK44OZ91pVszP4" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-block bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold py-3 px-6 rounded-full transition-all duration-300 hover:scale-105 shadow-lg shadow-green-500/20"
+              >
+                Join WhatsApp Group
+              </a>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative w-full overflow-hidden py-12 px-4 sm:px-6 lg:px-8">

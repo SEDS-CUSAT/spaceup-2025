@@ -17,19 +17,35 @@ if (!cloudinaryConfig.cloud_name || !cloudinaryConfig.api_key || !cloudinaryConf
 
 cloudinary.config(cloudinaryConfig);
 
-// Placeholder function for referral trigger
+// function for referral trigger
 async function triggerReferralIncrease(referralCode) {
-  // TODO: Send POST request to API to increment referral count
-  // try {
-  //   await fetch('API_ENDPOINT', {
-  //     method: 'POST',
-  //     body: JSON.stringify({ code: referralCode }),
-  //     headers: { 'Content-Type': 'application/json' }
-  //   });
-  // } catch (error) {
-  //   console.error('Failed to trigger referral increase:', error);
-  // }
-  console.log(`Referral code used: ${referralCode}`);
+  const serviceUrl = process.env.AMBASSADOR_SERVICE_URL;
+  const apiKey = process.env.AMBASSADOR_API_KEY;
+
+  if (!serviceUrl || !apiKey) {
+    console.warn("Ambassador service URL or API Key is missing.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${serviceUrl}/api/ambassadors/referrals/increment`, {
+      method: 'POST',
+      body: JSON.stringify({ referralCode }),
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('Failed to increment referral:', response.status, errorData);
+    } else {
+      console.log(`Referral code ${referralCode} incremented successfully.`);
+    }
+  } catch (error) {
+    console.error('Failed to trigger referral increase:', error);
+  }
 }
 
 export async function registerUser(formData) {
@@ -50,11 +66,6 @@ export async function registerUser(formData) {
       paymentScreenshot: formData.get('paymentScreenshot'),
     };
 
-    // Validate fields (excluding file for now, or validate file metadata)
-    // We can't easily validate the File object with Zod schema defined for client-side FileList
-    // So we'll do manual validation or adjust schema.
-    
-    // Let's validate the text fields first
     const validatedFields = registerSchema.omit({ paymentScreenshot: true }).safeParse(rawData);
 
     if (!validatedFields.success) {
