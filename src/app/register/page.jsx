@@ -109,8 +109,12 @@ export default function RegisterPage() {
         <div className="absolute bottom-10 right-10 z-0 hidden lg:block opacity-80 animation-delay-2000">
            <FloatingAstronaut className="w-32 h-32 rotate-12" />
         </div>
+
+        <div className="lg:hidden relative z-50 -mb-20 pointer-events-none flex justify-center">
+            <FloatingAstronaut className="w-48 h-48 drop-shadow-2xl" />
+        </div>
         
-        <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)]">
+        <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] mt-4">
           <CardHeader className="space-y-1 text-center relative overflow-hidden rounded-t-xl">
             <div className="absolute inset-0 bg-linear-to-r blur-xl"></div>
             <CardTitle className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 relative z-10">
@@ -137,6 +141,20 @@ export default function RegisterPage() {
                 Join WhatsApp Group
               </a>
             </div>
+
+            <div className="pt-2">
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setIsRegistered(false);
+                  localStorage.removeItem('spaceup_registered');
+                  setSubmitMessage(null);
+                }}
+                className="border-neutral-700 hover:bg-neutral-800 text-neutral-300 hover:text-white"
+              >
+                Register Another Person
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -156,8 +174,12 @@ export default function RegisterPage() {
       <div className="absolute bottom-10 right-10 z-0 hidden lg:block opacity-80 animation-delay-2000">
          <FloatingAstronaut className="w-32 h-32 rotate-12" />
       </div>
+
+      <div className="lg:hidden relative z-50 -mb-20 pointer-events-none flex justify-center">
+         <FloatingAstronaut className="w-48 h-48 drop-shadow-2xl" />
+      </div>
       
-      <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)]">
+      <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] mt-4">
         <CardHeader className="space-y-1 text-center relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 bg-linear-to-r  blur-xl"></div>
           <CardTitle className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 relative z-10">
@@ -343,6 +365,47 @@ export default function RegisterPage() {
 
             <div className="border-t border-neutral-800 my-6"></div>
             <div className="text-lg font-semibold text-neutral-200">Payment Details</div>
+            
+            <div className="bg-neutral-900/50 p-4 rounded-lg border border-neutral-800 mb-6 mt-4">
+              <div className="text-center mb-4">
+                <p className="text-neutral-300 mb-2">Registration Fee</p>
+                <div className="text-4xl font-bold text-green-400">
+                  ₹399
+                </div>
+              </div>
+
+              <div className="flex flex-col items-center space-y-4">
+                {/* PDF Viewer for QR Code */}
+                <div className="w-full aspect-3/4 max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
+                  <iframe 
+                    src="/mesac550@sbi.pdf#page=1&toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
+                    className="w-[calc(100%+20px)] h-full border-0 absolute inset-0 -ml-[2px]"
+                    title="Payment QR Code"
+                    scrolling="no"
+                  />
+                </div>
+                
+                <div className="w-full text-center space-y-2">
+                  <p className="text-sm text-neutral-400">Scan QR Code or pay to UPI ID</p>
+                  <div 
+                    className="flex items-center justify-center gap-2 p-3 bg-black/50 rounded border border-neutral-800 cursor-pointer hover:border-neutral-600 transition-colors group"
+                    onClick={() => {
+                      navigator.clipboard.writeText('mesac550@sbi');
+                      // Simple feedback
+                      const el = document.getElementById('copy-feedback');
+                      if (el) {
+                        el.style.opacity = '1';
+                        setTimeout(() => el.style.opacity = '0', 2000);
+                      }
+                    }}
+                  >
+                    <code className="text-lg text-indigo-300 font-mono">mesac550@sbi</code>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-neutral-500 group-hover:text-white transition-colors"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  </div>
+                  <p id="copy-feedback" className="text-xs text-green-400 opacity-0 transition-opacity duration-300">Copied to clipboard!</p>
+                </div>
+              </div>
+            </div>
 
             {/* UPI Transaction ID */}
             <div className="space-y-2">
