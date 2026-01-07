@@ -186,7 +186,7 @@ export default function RegisterPage() {
             SpaceUp Registration
           </CardTitle>
           <CardDescription className="text-neutral-400 relative z-10 text-lg">
-            Join us for an incredible journey into space!
+            Join us for an incredible journey into space on <span className="text-indigo-300 font-semibold">Jan 24th</span>!
           </CardDescription>
         </CardHeader>
         <CardContent>
