@@ -18,7 +18,7 @@ if (!cloudinaryConfig.cloud_name || !cloudinaryConfig.api_key || !cloudinaryConf
 cloudinary.config(cloudinaryConfig);
 
 // function for referral trigger
-async function triggerReferralIncrease(referralCode) {
+async function triggerReferralIncrease(referralCode, retries = 3) {
   const serviceUrl = process.env.AMBASSADOR_SERVICE_URL;
   const apiKey = process.env.AMBASSADOR_API_KEY;
 
@@ -27,24 +27,45 @@ async function triggerReferralIncrease(referralCode) {
     return;
   }
 
-  try {
-    const response = await fetch(`${serviceUrl}/api/ambassadors/referrals/increment`, {
-      method: 'POST',
-      body: JSON.stringify({ referralCode }),
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      }
-    });
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(`${serviceUrl}/api/ambassadors/referrals/increment`, {
+        method: 'POST',
+        body: JSON.stringify({ referralCode }),
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        }
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+      if (response.ok) {
+        console.log(`Referral code ${referralCode} incremented successfully.`);
+        return;
+      }
+
+      if (response.status === 429 && i < retries - 1) {
+        const waitTime = 1000 * Math.pow(2, i);
+        console.warn(`Rate limited (429). Retrying in ${waitTime}ms...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+
+      const errorText = await response.text();
+      let errorData;
+      try {
+        errorData = JSON.parse(errorText);
+      } catch {
+        errorData = { message: errorText.slice(0, 200) }; // Truncate HTML if it's a page
+      }
       console.error('Failed to increment referral:', response.status, errorData);
-    } else {
-      console.log(`Referral code ${referralCode} incremented successfully.`);
+      return;
+
+    } catch (error) {
+      console.error('Failed to trigger referral increase:', error);
+      if (i < retries - 1) {
+         await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
-  } catch (error) {
-    console.error('Failed to trigger referral increase:', error);
   }
 }
 
