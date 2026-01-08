@@ -5,16 +5,17 @@ import { cn } from "@/lib/utils"
 
 export function ScrollProgress({
   className,
-  ref,
+  containerRef,
   ...props
 }) {
-  const { scrollYProgress } = useScroll()
+  const { scrollYProgress } = useScroll({
+    container: containerRef,
+  });
 
   return (
     <motion.div
-      ref={ref}
       className={cn(
-        "fixed inset-x-0 top-0 z-50 h-px origin-left bg-gradient-to-r from-[#A97CF8] via-[#F38CB8] to-[#FDCC92]",
+        "fixed inset-x-0 top-0 z-100 h-[2px] origin-left bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500",
         className
       )}
       style={{
