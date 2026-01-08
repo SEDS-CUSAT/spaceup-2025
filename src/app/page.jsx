@@ -26,7 +26,6 @@ export default function Home() {
       />
       
       {/* Particles Layer */}
-      {/* Particles Layer */}
       <div className="fixed inset-0 z-1 pointer-events-none">
         <ShootingStars minDelay={3500} maxDelay={5000} starColor="#9E00FF" trailColor="#2EB9DF" />
         <ShootingStars minDelay={4500} maxDelay={6500} starColor="#FF0099" trailColor="#FFB800" />

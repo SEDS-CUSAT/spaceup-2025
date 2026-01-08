@@ -30,6 +30,7 @@ import { FloatingAstronaut } from "@/components/ui/floating-astronaut";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { Particles } from "@/components/ui/particles";
 
 const REGISTRATION_AMOUNT = 399;
 
@@ -156,6 +157,10 @@ export default function RegisterPage() {
   if (isRegistered) {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative w-full overflow-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar">
+        <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+        style={{ backgroundImage: `url('/BG.jpg')` }}
+      />
         <ScrollProgress className="top-0" />
         <div className="absolute top-8 left-8 z-50">
           <Link href="/">
@@ -165,11 +170,61 @@ export default function RegisterPage() {
             </Button>
           </Link>
         </div>
-        <div className="absolute inset-0 w-full h-full z-0">
+        {/* <div className="absolute inset-0 w-full h-full z-0">
           <ShootingStars />
           <StarsBackground />
         </div>
+        */}
+
+        <div className="fixed inset-0 z-1 pointer-events-none">
+                <ShootingStars minDelay={3500} maxDelay={5000} starColor="#9E00FF" trailColor="#2EB9DF" />
+                <ShootingStars minDelay={4500} maxDelay={6500} starColor="#FF0099" trailColor="#FFB800" />
+                <ShootingStars minDelay={5500} maxDelay={7500} starColor="#00FF9E" trailColor="#00B8FF" />
+                <ShootingStars minDelay={6500} maxDelay={8500} starColor="#FF4444" trailColor="#FF8888" />
+                
+                {/* White stars */}
+                <Particles
+                  className="absolute inset-0"
+                  quantity={100}
+                  ease={80}
+                  color="#ffffff"
+                  refresh
+                />
+                {/* Purple stars */}
+                <Particles
+                  className="absolute inset-0"
+                  quantity={70}
+                  ease={80}
+                  color="#A97CF8"
+                  refresh
+                />
+                {/* Pink stars */}
+                <Particles
+                  className="absolute inset-0"
+                  quantity={70}
+                  ease={80}
+                  color="#F38CB8"
+                  refresh
+                />
+                {/* Deep Pink stars */}
+                <Particles
+                  className="absolute inset-0"
+                  quantity={50}
+                  ease={80}
+                  color="#EC4899"
+                  refresh
+                />
+                 {/* Gold stars */}
+                 <Particles
+                  className="absolute inset-0"
+                  quantity={30}
+                  ease={80}
+                  color="#FDCC92"
+                  refresh
+                />
+              </div>
         
+
         {/* Desktop Astronauts */}
         <div className="fixed top-32 left-10 z-0 hidden lg:block opacity-80 pointer-events-none">
           <FloatingAstronaut className="w-48 h-48" />
@@ -234,6 +289,11 @@ export default function RegisterPage() {
       ref={containerRef}
       className="h-screen bg-neutral-950 flex flex-col items-center relative w-full overflow-y-auto overflow-x-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar"
     >
+      <div
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+        style={{ backgroundImage: `url('/BG.jpg')` }}
+      />
+
       <ScrollProgress className="top-0" containerRef={containerRef} />
       <div className="absolute top-8 left-8 z-50">
         <Link href="/">
@@ -243,10 +303,58 @@ export default function RegisterPage() {
           </Button>
         </Link>
       </div>
-      <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+      {/* <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
         <ShootingStars />
         <StarsBackground />
-      </div>
+      </div> */}
+
+      <div className="fixed inset-0 z-1 pointer-events-none">
+              <ShootingStars minDelay={3500} maxDelay={5000} starColor="#9E00FF" trailColor="#2EB9DF" />
+              <ShootingStars minDelay={4500} maxDelay={6500} starColor="#FF0099" trailColor="#FFB800" />
+              <ShootingStars minDelay={5500} maxDelay={7500} starColor="#00FF9E" trailColor="#00B8FF" />
+              <ShootingStars minDelay={6500} maxDelay={8500} starColor="#FF4444" trailColor="#FF8888" />
+              
+              {/* White stars */}
+              <Particles
+                className="absolute inset-0"
+                quantity={100}
+                ease={80}
+                color="#ffffff"
+                refresh
+              />
+              {/* Purple stars */}
+              <Particles
+                className="absolute inset-0"
+                quantity={70}
+                ease={80}
+                color="#A97CF8"
+                refresh
+              />
+              {/* Pink stars */}
+              <Particles
+                className="absolute inset-0"
+                quantity={70}
+                ease={80}
+                color="#F38CB8"
+                refresh
+              />
+              {/* Deep Pink stars */}
+              <Particles
+                className="absolute inset-0"
+                quantity={50}
+                ease={80}
+                color="#EC4899"
+                refresh
+              />
+               {/* Gold stars */}
+               <Particles
+                className="absolute inset-0"
+                quantity={30}
+                ease={80}
+                color="#FDCC92"
+                refresh
+              />
+            </div>
 
       <div className="fixed top-24 left-10 z-0 hidden lg:block opacity-80 pointer-events-none">
         <FloatingAstronaut className="w-48 h-48" />
