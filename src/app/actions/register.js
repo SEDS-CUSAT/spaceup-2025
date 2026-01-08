@@ -123,6 +123,7 @@ export async function registerUser(formData) {
       referralSource: formData.get('referralSource'),
       referralCode: formData.get('referralCode'),
       upiTransactionId: formData.get('upiTransactionId'),
+      amount: formData.get('amount'),
       paymentScreenshot: formData.get('paymentScreenshot'),
     };
 

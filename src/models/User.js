@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide your email'],
     unique: true,
     match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,})+$/,
       'Please provide a valid email address',
     ],
   },
@@ -49,6 +49,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide the UPI Transaction ID'],
     unique: true,
+  },
+  amount: {
+    type: Number,
+    required: [true, 'Amount is required'],
   },
   paymentScreenshotUrl: {
     type: String,

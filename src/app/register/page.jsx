@@ -28,6 +28,8 @@ import { StarsBackground } from "@/components/ui/stars-background";
 import { FileUpload } from "@/components/ui/file-upload";
 import { FloatingAstronaut } from "@/components/ui/floating-astronaut";
 
+const REGISTRATION_AMOUNT = 399;
+
 export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
@@ -114,6 +116,7 @@ export default function RegisterPage() {
     formData.append('referralSource', data.referralSource || '');
     formData.append('referralCode', data.referralCode || '');
     formData.append('upiTransactionId', data.upiTransactionId);
+    formData.append('amount', data.amount);
     
     // data.paymentScreenshot is an array of files from FileUpload
     if (data.paymentScreenshot && data.paymentScreenshot[0]) {
@@ -246,6 +249,7 @@ export default function RegisterPage() {
           )}
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <input type="hidden" value={REGISTRATION_AMOUNT} {...register('amount')} />
             
             {/* Name */}
             <div className="space-y-2">
@@ -439,18 +443,17 @@ export default function RegisterPage() {
               <div className="text-center mb-4">
                 <p className="text-neutral-300 mb-2">Registration Fee</p>
                 <div className="text-4xl font-bold text-green-400">
-                  ₹399
+                  ₹{REGISTRATION_AMOUNT}
                 </div>
               </div>
 
               <div className="flex flex-col items-center space-y-4">
-                {/* PDF Viewer for QR Code */}
-                <div className="w-full aspect-3/4 max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
-                  <iframe 
-                    src="/mesac550@sbi.pdf#page=1&toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
-                    className="w-[calc(100%+20px)] h-full border-0 absolute inset-0 -ml-[2px]"
-                    title="Payment QR Code"
-                    scrolling="no"
+                {/* QR Code Image */}
+                <div className="w-full max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
+                  <img 
+                    src="/mesac550sbi.jpeg" 
+                    alt="Payment QR Code"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
                 
