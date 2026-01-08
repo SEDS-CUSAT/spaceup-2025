@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/lib/schemas";
 import { registerUser, verifyReferralCode } from "@/app/actions/register";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -37,7 +38,6 @@ const REGISTRATION_AMOUNT = 399;
 export default function RegisterPage() {
   const containerRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
   const [referralStatus, setReferralStatus] = useState("idle"); // idle, verifying, valid, invalid
   const [referralFeedback, setReferralFeedback] = useState("");
@@ -91,14 +91,17 @@ export default function RegisterPage() {
       const result = await verifyReferralCode(code);
       if (result.success && result.valid) {
         setReferralStatus("valid");
-        setReferralFeedback(`Valid code: ${result.data?.name || "Ambassador"}`);
+        setReferralFeedback(`You are referred by: ${result.data?.name || "Ambassador"}`);
+        toast.success(`Valid referral code from ${result.data?.name || "Ambassador"}`);
       } else {
         setReferralStatus("invalid");
         setReferralFeedback(result.error || "Invalid referral code");
+        toast.error(result.error || "Invalid referral code");
       }
     } catch (error) {
       setReferralStatus("invalid");
       setReferralFeedback("Error verifying code");
+      toast.error("Error verifying code");
     }
   };
 
@@ -107,8 +110,13 @@ export default function RegisterPage() {
   };
 
   const onSubmit = async (data) => {
+    // Check if referral code needs verification
+    if (data.referralCode && referralStatus !== "valid") {
+      toast.error("Please verify your referral code before submitting the form.");
+      return;
+    }
+
     setIsSubmitting(true);
-    setSubmitMessage(null);
 
     const formData = new FormData();
     formData.append("name", data.name);
@@ -131,24 +139,18 @@ export default function RegisterPage() {
     try {
       const result = await registerUser(formData);
       if (result.success) {
-        setSubmitMessage({ type: "success", text: result.message });
+        toast.success(result.message);
         localStorage.setItem("spaceup_registered", "true");
         setIsRegistered(true);
         reset();
       } else {
-        setSubmitMessage({
-          type: "error",
-          text: result.message || "Registration failed",
-        });
+        toast.error(result.message || "Registration failed");
         if (result.errors) {
           console.error(result.errors);
         }
       }
     } catch (error) {
-      setSubmitMessage({
-        type: "error",
-        text: "An unexpected error occurred.",
-      });
+      toast.error("An unexpected error occurred.");
     } finally {
       setIsSubmitting(false);
     }
@@ -380,19 +382,6 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {submitMessage && (
-            <div
-              className={cn(
-                "p-4 mb-6 rounded-lg text-center font-medium border",
-                submitMessage.type === "success"
-                  ? "bg-green-500/10 text-green-400 border-green-500/20"
-                  : "bg-red-500/10 text-red-400 border-red-500/20",
-              )}
-            >
-              {submitMessage.text}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <input
               type="hidden"
@@ -783,8 +772,7 @@ export default function RegisterPage() {
               <Button
                 type="submit"
                 className="w-full bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 font-bold py-6 text-lg shadow-lg shadow-purple-500/20 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                disabled={isSubmitting ||
-                  (!!referralCodeValue && referralStatus !== "valid")}
+                disabled={isSubmitting}
               >
                 {isSubmitting
                   ? (
@@ -797,6 +785,11 @@ export default function RegisterPage() {
                     "Register Now"
                   )}
               </Button>
+              {referralCodeValue && referralStatus !== "valid" && (
+                <p className="text-center text-sm text-yellow-400 mt-3">
+                  ⚠️ Please verify your referral code using the button above before submitting
+                </p>
+              )}
             </div>
 
             <p className="text-center text-xs text-neutral-500 mt-4">
