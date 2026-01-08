@@ -154,7 +154,7 @@ export default function RegisterPage() {
            <FloatingAstronaut className="w-48 h-48" />
         </div>
         <div className="absolute bottom-10 right-10 z-0 hidden lg:block opacity-80 animation-delay-2000">
-           <FloatingAstronaut className="w-32 h-32 rotate-12" />
+           <FloatingAstronaut className="w-32 h-32 scale-x-[-1] rotate-30" />
         </div>
 
         <div className="lg:hidden relative z-50 -mb-20 pointer-events-none flex justify-center">
@@ -229,7 +229,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] mt-4">
         <CardHeader className="space-y-1 text-center relative overflow-hidden rounded-t-xl">
           <div className="absolute inset-0 bg-linear-to-r  blur-xl"></div>
-          <CardTitle className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 relative z-10">
+            <CardTitle className="font-nico text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 relative z-10">
             SpaceUp Registration
           </CardTitle>
           <CardDescription className="text-neutral-400 relative z-10 text-lg">
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                 className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.name && "border-red-500 focus:ring-red-500")} 
                 {...register('name')} 
               />
-              {errors.name && <span className="text-red-400 text-sm">{errors.name.message}</span>}
+              {errors.name && <span className="text-red-500 font-bold text-xs">{errors.name.message}</span>}
             </div>
 
             {/* Email */}
@@ -273,7 +273,7 @@ export default function RegisterPage() {
                 className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.email && "border-red-500 focus:ring-red-500")} 
                 {...register('email')} 
               />
-              {errors.email && <span className="text-red-400 text-sm">{errors.email.message}</span>}
+              {errors.email && <span className="text-red-500 font-bold text-xs">{errors.email.message}</span>}
             </div>
 
             {/* WhatsApp Number */}
@@ -286,7 +286,7 @@ export default function RegisterPage() {
                 className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.whatsappNumber && "border-red-500 focus:ring-red-500")} 
                 {...register('whatsappNumber')} 
               />
-              {errors.whatsappNumber && <span className="text-red-400 text-sm">{errors.whatsappNumber.message}</span>}
+              {errors.whatsappNumber && <span className="text-red-500 font-bold text-xs">{errors.whatsappNumber.message}</span>}
             </div>
 
             {/* College Name */}
@@ -299,7 +299,7 @@ export default function RegisterPage() {
                 className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.collegeName && "border-red-500 focus:ring-red-500")} 
                 {...register('collegeName')} 
               />
-              {errors.collegeName && <span className="text-red-400 text-sm">{errors.collegeName.message}</span>}
+              {errors.collegeName && <span className="text-red-500 font-bold text-xs">{errors.collegeName.message}</span>}
             </div>
 
             {/* Year of Study */}
@@ -325,31 +325,11 @@ export default function RegisterPage() {
                   </Select>
                 )}
               />
-              {errors.yearOfStudy && <span className="text-red-400 text-sm">{errors.yearOfStudy.message}</span>}
+              {errors.yearOfStudy && <span className="text-red-500 font-bold text-xs">{errors.yearOfStudy.message}</span>}
             </div>
 
             {/* Workshop */}
-            <div className="space-y-2">
-              <Label htmlFor="workshop" className="text-neutral-200">Workshop you're interested in <span className="text-red-500 font-bold ml-1">*</span></Label>
-              <Controller
-                name="workshop"
-                control={control}
-                render={({ field }) => (
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <SelectTrigger className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100", errors.workshop && "border-red-500 focus:ring-red-500")}>
-                      <SelectValue placeholder="Select Workshop" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-neutral-900 border-neutral-800 text-neutral-100">
-                      <SelectItem value="Rocketry">Rocketry</SelectItem>
-                      <SelectItem value="Astronomy">Astronomy</SelectItem>
-                      <SelectItem value="Space Policy">Space Policy</SelectItem>
-                      <SelectItem value="CubeSat">CubeSat</SelectItem>
-                    </SelectContent>
-                  </Select>
-                )}
-              />
-              {errors.workshop && <span className="text-red-400 text-sm">{errors.workshop.message}</span>}
-            </div>
+            <input type="hidden" value="NOT-DECIDED" {...register('workshop')} />
 
             {/* Attended Before */}
             <div className="space-y-2">
@@ -382,7 +362,7 @@ export default function RegisterPage() {
                   </div>
                 )}
               />
-              {errors.attendedBefore && <span className="text-red-400 text-sm">{errors.attendedBefore.message}</span>}
+              {errors.attendedBefore && <span className="text-red-500 font-bold text-xs">{errors.attendedBefore.message}</span>}
             </div>
 
             {/* Referral Source */}
@@ -395,7 +375,7 @@ export default function RegisterPage() {
                 className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.referralSource && "border-red-500 focus:ring-red-500")} 
                 {...register('referralSource')} 
               />
-              {errors.referralSource && <span className="text-red-400 text-sm">{errors.referralSource.message}</span>}
+              {errors.referralSource && <span className="text-red-500 font-bold text-xs">{errors.referralSource.message}</span>}
             </div>
 
             {/* Referral Code */}
@@ -433,7 +413,7 @@ export default function RegisterPage() {
                   {referralFeedback}
                 </span>
               )}
-              {errors.referralCode && <span className="text-red-400 text-sm">{errors.referralCode.message}</span>}
+              {errors.referralCode && <span className="text-red-500 font-bold text-xs">{errors.referralCode.message}</span>}
             </div>
 
             <div className="border-t border-neutral-800 my-6"></div>
@@ -489,7 +469,7 @@ export default function RegisterPage() {
                 className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.upiTransactionId && "border-red-500 focus:ring-red-500")} 
                 {...register('upiTransactionId')} 
               />
-              {errors.upiTransactionId && <span className="text-red-400 text-sm">{errors.upiTransactionId.message}</span>}
+              {errors.upiTransactionId && <span className="text-red-500 font-bold text-xs">{errors.upiTransactionId.message}</span>}
             </div>
 
             {/* Payment Screenshot */}
@@ -498,7 +478,7 @@ export default function RegisterPage() {
               <div className="w-full max-w-4xl mx-auto min-h-96 border border-dashed bg-white dark:bg-black border-neutral-200 dark:border-neutral-800 rounded-lg">
                 <FileUpload onChange={handleFileUpload} />
               </div>
-              {errors.paymentScreenshot && <span className="text-red-400 text-sm">{errors.paymentScreenshot.message}</span>}
+              {errors.paymentScreenshot && <span className="text-red-500 font-bold text-xs">{errors.paymentScreenshot.message}</span>}
             </div>
 
             <div className="pt-4">
@@ -517,6 +497,10 @@ export default function RegisterPage() {
                 )}
               </Button>
             </div>
+
+            <p className="text-center text-xs text-neutral-500 mt-4">
+              Having issues? Contact us at <a href="mailto:spaceup@sedscusat.com" className="text-indigo-400 hover:text-indigo-300 transition-colors">spaceup@sedscusat.com</a>
+            </p>
 
           </form>
         </CardContent>

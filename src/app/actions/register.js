@@ -118,7 +118,7 @@ export async function registerUser(formData) {
       whatsappNumber: formData.get('whatsappNumber'),
       collegeName: formData.get('collegeName'),
       yearOfStudy: formData.get('yearOfStudy'),
-      workshop: formData.get('workshop'),
+      workshop: 'NOT-DECIDED', // Enforce default value
       attendedBefore: formData.get('attendedBefore'),
       referralSource: formData.get('referralSource'),
       referralCode: formData.get('referralCode'),
