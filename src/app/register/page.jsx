@@ -37,7 +37,7 @@ export default function RegisterPage() {
   const containerRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
-  const [isRegistered, setIsRegistered] = useState(true);
+  const [isRegistered, setIsRegistered] = useState(false);
   const [referralStatus, setReferralStatus] = useState("idle"); // idle, verifying, valid, invalid
   const [referralFeedback, setReferralFeedback] = useState("");
 
@@ -159,10 +159,7 @@ export default function RegisterPage() {
         <ScrollProgress className="top-0" />
         <div className="absolute top-8 left-8 z-50">
           <Link href="/">
-            <Button
-              variant="ghost"
-              className="text-neutral-400 hover:text-white hover:bg-white/10 gap-2"
-            >
+            <Button className="bg-neutral-900/80 backdrop-blur-md border border-neutral-700 text-neutral-200 hover:bg-neutral-800 hover:text-white cursor-pointer transition-all hover:scale-105 gap-2 shadow-lg">
               <ArrowLeft className="w-4 h-4" />
               Back to Home
             </Button>
@@ -173,24 +170,19 @@ export default function RegisterPage() {
           <StarsBackground />
         </div>
         
-        {/* Mobile Astronaut */}
-        <div className="absolute left-0 right-0 top-20 z-0 lg:hidden block opacity-80">
-          <FloatingAstronaut className="w-32 h-32" />
-        </div>
-        
         {/* Desktop Astronauts */}
-        <div className="absolute top-40 left-10 z-0 hidden lg:block opacity-80">
+        <div className="fixed top-32 left-10 z-0 hidden lg:block opacity-80 pointer-events-none">
           <FloatingAstronaut className="w-48 h-48" />
         </div>
-        <div className="absolute bottom-4 right-10 z-0 hidden lg:block opacity-80 animation-delay-2000">
-          <FloatingAstronaut className="w-32 h-32 scale-x-[-1] rotate-45" />
+        <div className="fixed bottom-10 right-10 z-0 hidden lg:block opacity-80 animation-delay-2000 pointer-events-none">
+          <FloatingAstronaut className="w-32 h-32 scale-x-[-1] rotate-40" />
         </div>
 
-        {/* <div className="lg:hidden relative z-50 -mb-20 pointer-events-none flex justify-center">
-          <FloatingAstronaut className="w-48 h-48 drop-shadow-2xl" />
-        </div> */}
+        <div className="lg:hidden relative z-50 top-20 -mb-4 pointer-events-none flex justify-center">
+          <FloatingAstronaut className="w-32 h-32 drop-shadow-2xl" />
+        </div>
 
-        <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] mt-4">
+        <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] mt-8">
           <CardHeader className="space-y-1 text-center relative overflow-hidden rounded-t-xl">
             <div className="absolute inset-0 bg-linear-to-r blur-xl"></div>
             <CardTitle className="text-4xl font-bold tracking-tighter bg-clip-text text-transparent bg-linear-to-r from-indigo-200 via-purple-200 to-pink-200 relative z-10">
