@@ -8,7 +8,7 @@ const AMBASSADOR_URL = "https://spaceup-ambassador.sedscusat.com/";
 const Ambassador = () => {
   return (
     <StickyBanner
-      className="bg-linear-to-r from-blue-500 via-indigo-600 to-blue-500 text-white"
+      className="bg-gradient-to-r from-blue-500 via-indigo-600 to-blue-500 text-white"
       showCloseButton={false}
       hideOnScroll={false}
     >

@@ -9,7 +9,9 @@ const inter = Inter({
 export const metadata = {
   title: "SpaceUp",
   description: "The Official Website of SpaceUp - India's Largest Space Unconference",
-  icon: "/SpaceUp-Icon.jpg",
+  icons: {
+    icon: '/SpaceUp.jpg',
+  },
 };
 
 export default function RootLayout({ children }) {

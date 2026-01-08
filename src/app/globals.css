@@ -9,6 +9,13 @@
   100% { transform: translateY(0px); }
 }
 
+@font-face {
+  font-family: "Nico Moji";
+  src: url("/Nico Moji.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
@@ -192,6 +199,62 @@
   --shadow-2xl: 3px 3px 0px 0px hsl(206.1538 28.0576% 27.2549% / 2.50);
 }
 
+@theme {
+  --font-nico: "Nico Moji", sans-serif;
+  --font-tilt: "Tilt Neon", sans-serif;
+
+  --animate-fade-in: fade-in 1.5s ease-out forwards;
+  --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pulse-glow: pulse-glow 3s ease-in-out infinite;
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fade-in-up {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+
+  @keyframes pulse-glow {
+
+    0%,
+    100% {
+      box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
+    }
+
+    50% {
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.7);
+    }
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -200,4 +263,9 @@
     @apply bg-background text-foreground;
     letter-spacing: var(--tracking-normal);
   }
+}
+
+body {
+  background-color: black;
+  color: white;
 }
