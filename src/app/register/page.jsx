@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { registerSchema } from '@/lib/schemas';
-import { registerUser } from '@/app/actions/register';
+import { registerUser, verifyReferralCode } from '@/app/actions/register';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -32,6 +32,8 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState(null);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [referralStatus, setReferralStatus] = useState('idle'); // idle, verifying, valid, invalid
+  const [referralFeedback, setReferralFeedback] = useState('');
 
   useEffect(() => {
     const registered = localStorage.getItem('spaceup_registered');
@@ -45,11 +47,53 @@ export default function RegisterPage() {
     handleSubmit,
     control,
     setValue,
+    getValues,
+    watch,
     formState: { errors },
     reset,
   } = useForm({
     resolver: zodResolver(registerSchema),
   });
+
+  const referralCodeValue = watch('referralCode');
+
+  // Reset referral status when code changes
+  useEffect(() => {
+    if (!referralCodeValue) {
+      setReferralStatus('idle');
+      setReferralFeedback('');
+    } else if (referralStatus === 'valid' || referralStatus === 'invalid') {
+       // If user types after verification, reset to idle (require re-verification)
+       // Check if the current value matches the verified/invalid one?
+       // Actually simpler: if code changes, reset status to idle.
+       // But this effect runs on every keystroke.
+       // So we check if status is NOT idle, then set it to idle.
+       setReferralStatus('idle');
+       setReferralFeedback('');
+    }
+  }, [referralCodeValue]);
+
+  const handleVerifyReferral = async () => {
+    const code = getValues('referralCode');
+    if (!code) return;
+
+    setReferralStatus('verifying');
+    setReferralFeedback('');
+
+    try {
+      const result = await verifyReferralCode(code);
+      if (result.success && result.valid) {
+        setReferralStatus('valid');
+        setReferralFeedback(`Valid code: ${result.data?.name || 'Ambassador'}`);
+      } else {
+        setReferralStatus('invalid');
+        setReferralFeedback(result.error || 'Invalid referral code');
+      }
+    } catch (error) {
+      setReferralStatus('invalid');
+      setReferralFeedback('Error verifying code');
+    }
+  };
 
   const handleFileUpload = (files) => {
     setValue('paymentScreenshot', files);
@@ -353,13 +397,38 @@ export default function RegisterPage() {
             {/* Referral Code */}
             <div className="space-y-2">
               <Label htmlFor="referralCode" className="text-neutral-200">Referral Code <span className="text-xs text-neutral-500 ml-2">(Optional)</span></Label>
-              <Input 
-                id="referralCode"
-                type="text" 
-                placeholder="Enter Referral Code if any" 
-                className={cn("bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600", errors.referralCode && "border-red-500 focus:ring-red-500")} 
-                {...register('referralCode')} 
-              />
+              <div className="flex gap-2">
+                <Input 
+                  id="referralCode"
+                  type="text" 
+                  placeholder="Enter Referral Code if any" 
+                  readOnly={referralStatus === 'valid'}
+                  className={cn(
+                    "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
+                    errors.referralCode && "border-red-500 focus:ring-red-500",
+                    referralStatus === 'valid' && "border-green-500/50 focus:ring-green-500/50 text-green-400 bg-green-500/10 cursor-not-allowed"
+                  )} 
+                  {...register('referralCode')} 
+                />
+                {referralCodeValue && (
+                  <Button
+                    type="button"
+                    onClick={handleVerifyReferral}
+                    disabled={referralStatus === 'verifying' || referralStatus === 'valid'}
+                    className={cn(
+                      "min-w-[100px]",
+                      referralStatus === 'valid' ? "bg-green-500/20 text-green-400 hover:bg-green-500/30" : "bg-neutral-800 text-neutral-200 hover:bg-neutral-700"
+                    )}
+                  >
+                    {referralStatus === 'verifying' ? 'Checking...' : referralStatus === 'valid' ? 'Verified' : 'Verify'}
+                  </Button>
+                )}
+              </div>
+              {referralFeedback && (
+                <span className={cn("text-sm block", referralStatus === 'valid' ? "text-green-400" : "text-red-400")}>
+                  {referralFeedback}
+                </span>
+              )}
               {errors.referralCode && <span className="text-red-400 text-sm">{errors.referralCode.message}</span>}
             </div>
 
@@ -432,8 +501,8 @@ export default function RegisterPage() {
             <div className="pt-4">
               <Button 
                 type="submit" 
-                className="w-full bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 font-bold py-6 text-lg shadow-lg shadow-purple-500/20 transition-all duration-300 hover:scale-[1.02]" 
-                disabled={isSubmitting}
+                className="w-full bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 text-white hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 font-bold py-6 text-lg shadow-lg shadow-purple-500/20 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed" 
+                disabled={isSubmitting || (!!referralCodeValue && referralStatus !== 'valid')}
               >
                 {isSubmitting ? (
                   <>

@@ -69,6 +69,45 @@ async function triggerReferralIncrease(referralCode, retries = 3) {
   }
 }
 
+export async function verifyReferralCode(referralCode) {
+  const serviceUrl = process.env.AMBASSADOR_SERVICE_URL;
+  const apiKey = process.env.AMBASSADOR_API_KEY;
+
+  if (!serviceUrl || !apiKey) {
+    console.warn("Ambassador service URL or API Key is missing.");
+    return { success: false, error: "Service configuration error" };
+  }
+
+  try {
+    const response = await fetch(`${serviceUrl}/api/ambassadors/referrals/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({ referralCode }),
+    });
+
+    const text = await response.text();
+    let data;
+    try {
+      data = text ? JSON.parse(text) : {};
+    } catch (e) {
+      console.error("Failed to parse verification response:", text);
+      return { success: false, error: "Invalid server response" };
+    }
+
+    if (response.ok && data.success) {
+      return { success: true, valid: true, data: data.data };
+    } else {
+      return { success: false, valid: false, error: data.error || `Verification failed (${response.status})` };
+    }
+  } catch (error) {
+    console.error("Error verifying referral code:", error);
+    return { success: false, error: "Network error during verification" };
+  }
+}
+
 export async function registerUser(formData) {
   try {
     await dbConnect();

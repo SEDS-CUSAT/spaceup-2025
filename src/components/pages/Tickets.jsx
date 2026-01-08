@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Tickets = () => {
     // Generate random positions for lamps to create scattered effect
     // In a real app, might want fixed positions to match design exactly, 
@@ -31,9 +33,9 @@ const Tickets = () => {
                     <h2 className="font-nico text-white text-4xl sm:text-5xl md:text-6xl mb-2">Get</h2>
                     <h2 className="font-nico text-white text-4xl sm:text-5xl md:text-6xl mb-10 md:mb-12">Tickets</h2>
 
-                    <button className="bg-gradient-to-r from-[#8B5F80] to-[#A37496] hover:from-[#A37496] hover:to-[#C08BA8] text-white font-nico text-xl md:text-2xl px-12 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] border border-white/20 active:scale-95">
+                    <Link className="bg-linear-to-r from-[#8B5F80] to-[#A37496] hover:from-[#A37496] hover:to-[#C08BA8] text-white font-nico text-xl md:text-2xl px-12 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] border border-white/20 active:scale-95" href="/register">
                         HERE!
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Contact Us Card */}
