@@ -28,7 +28,12 @@ const Hero = () => {
 
                 {/* Info Card - Dark Purple Pill */}
                 <div className="mt-12 md:mt-16 bg-[#2E1C3B]/70 backdrop-blur-md px-8 py-6 md:px-12 md:py-8 rounded-3xl border border-white/10 flex flex-col md:flex-row gap-6 md:gap-16 items-center justify-center shadow-[0_0_30px_rgba(75,0,130,0.4)] hover:shadow-[0_0_40px_rgba(147,51,234,0.3)] transition-shadow duration-300">
-                    <div className="text-center group cursor-default">
+                    <a 
+                        href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=SpaceUp+Vol+7&dates=20260124T090000/20260124T170000&details=SpaceUp+Vol+7+-+India's+Largest+Space+Unconference&location=Seminar+Complex,+CUSAT,+Kochi"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-center group cursor-pointer"
+                    >
                         <p className="font-tilt text-purple-200 text-xs sm:text-sm tracking-widest uppercase mb-1">Date</p>
                         <p className="font-nico text-white text-lg md:text-2xl leading-relaxed group-hover:text-purple-300 transition-colors">
                             24th January
@@ -36,12 +41,17 @@ const Hero = () => {
                         <p className="font-nico text-white text-base md:text-xl leading-relaxed">
                             2026
                         </p>
-                    </div>
+                    </a>
 
                     <div className="hidden md:block w-px h-16 bg-linear-to-b from-transparent via-white/50 to-transparent"></div>
                     <div className="md:hidden w-16 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"></div>
 
-                    <div className="text-center group cursor-default">
+                    <a 
+                        href="https://maps.app.goo.gl/xYDQ1JdYtw8vcFNC7"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-center group cursor-pointer"
+                    >
                         <p className="font-tilt text-purple-200 text-xs sm:text-sm tracking-widest uppercase mb-1">Venue</p>
                         <p className="font-nico text-white text-lg md:text-2xl leading-relaxed group-hover:text-purple-300 transition-colors">
                             Seminar Complex,
@@ -49,7 +59,7 @@ const Hero = () => {
                         <p className="font-nico text-white text-base md:text-xl leading-relaxed">
                             CUSAT
                         </p>
-                    </div>
+                    </a>
                 </div>
             </div>
         </div>
