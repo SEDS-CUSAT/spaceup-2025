@@ -10,7 +10,7 @@ const Footer = () => {
 
                 {/* Logo & Tagline */}
                 <div className="flex flex-col items-center mb-8">
-                    <h2 className="font-nico text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 text-3xl md:text-5xl tracking-widest drop-shadow-sm mb-2">
+                    <h2 className="font-nico text-transparent bg-clip-text bg-linear-to-r from-purple-400 to-pink-400 text-3xl md:text-5xl tracking-widest drop-shadow-sm mb-2">
                         SPACEUP
                     </h2>
                     <p className="font-tilt text-purple-200 text-sm md:text-base tracking-widest uppercase opacity-80">
@@ -36,7 +36,7 @@ const Footer = () => {
                             className="font-nico text-white/80 text-sm md:text-lg hover:text-white transition-all duration-300 relative group"
                         >
                             {item.label}
-                            <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full group-hover:-translate-x-1/2"></span>
+                            <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-linear-to-r from-purple-500 to-pink-500 transition-all duration-300 group-hover:w-full group-hover:-translate-x-1/2"></span>
                         </a>
                     ))}
                 </div>
@@ -72,7 +72,7 @@ const Footer = () => {
                 {/* Copyright */}
                 <div className="text-center border-t border-white/5 pt-6 w-full max-w-xl">
                     <p className="font-tilt text-white/40 text-xs md:text-sm">
-                        &copy; 2025 SpaceUp. Made for the Stars.
+                        &copy; 2026 SedsCusat. Made for the Stars.
                     </p>
                 </div>
 

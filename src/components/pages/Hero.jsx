@@ -23,7 +23,7 @@ const Hero = () => {
                     SPACEUP
                 </h1>
                 <h2 className="font-nico text-white text-3xl sm:text-5xl md:text-7xl tracking-widest mt-4 md:mt-2 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-                    2025
+                    Vol 7
                 </h2>
 
                 {/* Info Card - Dark Purple Pill */}
@@ -31,15 +31,15 @@ const Hero = () => {
                     <div className="text-center group cursor-default">
                         <p className="font-tilt text-purple-200 text-xs sm:text-sm tracking-widest uppercase mb-1">Date</p>
                         <p className="font-nico text-white text-lg md:text-2xl leading-relaxed group-hover:text-purple-300 transition-colors">
-                            6th December
+                            24th January
                         </p>
                         <p className="font-nico text-white text-base md:text-xl leading-relaxed">
-                            2025
+                            2026
                         </p>
                     </div>
 
-                    <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-white/50 to-transparent"></div>
-                    <div className="md:hidden w-16 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+                    <div className="hidden md:block w-px h-16 bg-linear-to-b from-transparent via-white/50 to-transparent"></div>
+                    <div className="md:hidden w-16 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"></div>
 
                     <div className="text-center group cursor-default">
                         <p className="font-tilt text-purple-200 text-xs sm:text-sm tracking-widest uppercase mb-1">Venue</p>
