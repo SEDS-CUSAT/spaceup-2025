@@ -18,7 +18,7 @@ export default function Home() {
   const containerRef = useRef(null);
 
   return (
-    <div ref={containerRef} className="relative h-screen w-full overflow-y-auto no-scrollbar bg-black text-white selection:bg-purple-500/30">
+    <div ref={containerRef} className="relative h-screen w-full overflow-y-auto no-scrollbar bg-black text-white selection:bg-purple-500/30 overflow-x-hidden">
       {/* Global Background */}
       <div
         className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
