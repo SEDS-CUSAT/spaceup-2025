@@ -44,24 +44,24 @@ const Tickets = () => {
 
                     <div className="w-full max-w-lg space-y-4">
                         {/* President */}
-                        <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors group">
-                            <div className="flex flex-col text-left">
+                        <div className="flex flex-col md:flex-row justify-between items-center bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors group gap-3 md:gap-0">
+                            <div className="flex flex-col text-center md:text-left">
                                 <span className="font-nico text-purple-200 text-lg md:text-xl group-hover:text-purple-100 transition-colors">Kailas Sachdev</span>
                                 <span className="font-tilt text-white/50 text-xs md:text-sm uppercase tracking-wider">President</span>
                             </div>
-                            <div className="flex flex-col text-right">
+                            <div className="flex flex-col text-center md:text-right">
                                 <a href="tel:+916282288093" className="font-tilt text-white text-base md:text-lg hover:text-purple-300 transition-colors">+91 6282 288 093</a>
                                 <a href="mailto:president@sedscusat.com" className="font-tilt text-white/60 text-xs md:text-sm hover:text-white transition-colors">president@sedscusat.com</a>
                             </div>
                         </div>
 
                         {/* Secretary */}
-                        <div className="flex justify-between items-center bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors group">
-                            <div className="flex flex-col text-left">
+                        <div className="flex flex-col md:flex-row justify-between items-center bg-white/5 p-4 rounded-xl border border-white/5 hover:bg-white/10 transition-colors group gap-3 md:gap-0">
+                            <div className="flex flex-col text-center md:text-left">
                                 <span className="font-nico text-purple-200 text-lg md:text-xl group-hover:text-purple-100 transition-colors">Asiya Fyroos</span>
                                 <span className="font-tilt text-white/50 text-xs md:text-sm uppercase tracking-wider">Secretary</span>
                             </div>
-                            <div className="flex flex-col text-right">
+                            <div className="flex flex-col text-center md:text-right">
                                 <a href="tel:+917012495394" className="font-tilt text-white text-base md:text-lg hover:text-purple-300 transition-colors">+91 7012 495 394</a>
                                 <a href="mailto:secretary@sedscusat.com" className="font-tilt text-white/60 text-xs md:text-sm hover:text-white transition-colors">secretary@sedscusat.com</a>
                             </div>
