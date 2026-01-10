@@ -3,6 +3,7 @@
 import { v2 as cloudinary } from 'cloudinary';
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
+import Constants from '@/models/Constants';
 import { registerSchema } from '@/lib/schemas';
 
 const cloudinaryConfig = {
@@ -185,6 +186,17 @@ export async function registerUser(formData) {
       ...validatedFields.data,
       paymentScreenshotUrl: uploadResult.secure_url,
     });
+
+    // Update registration count in Constants
+    try {
+      const constants = await Constants.findById('app_constants') || 
+        await Constants.create({ _id: 'app_constants' });
+      constants.registrationCount += 1;
+      await constants.save();
+    } catch (error) {
+      console.error('Error updating registration count:', error);
+      // Don't fail the registration if this fails
+    }
 
     return { success: true, message: "Registration successful!" };
 
