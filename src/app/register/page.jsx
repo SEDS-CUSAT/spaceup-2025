@@ -273,7 +273,6 @@ export default function RegisterPage() {
                 onClick={() => {
                   setIsRegistered(false);
                   localStorage.removeItem("spaceup_registered");
-                  setSubmitMessage(null);
                 }}
                 className="border-neutral-700 hover:bg-neutral-800 text-neutral-300 hover:text-white"
               >
