@@ -58,6 +58,22 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please upload the payment screenshot'],
   },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  verifiedAt: {
+    type: Date,
+    required: false,
+  },
+  isCheckedIn: {
+    type: Boolean,
+    default: false,
+  },
+  checkedInAt: {
+    type: Date,
+    required: false,
+  },
 }, {
   timestamps: true,
 });
