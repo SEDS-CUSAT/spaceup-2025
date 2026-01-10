@@ -9,7 +9,7 @@ const About = () => {
             </h2>
 
             <div className="w-full max-w-5xl bg-[#2E1C3B]/60 backdrop-blur-md border border-purple-500/30 rounded-3xl p-8 md:p-12 mb-20 shadow-[0_0_50px_rgba(75,0,130,0.3)] animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                <p className="font-tilt text-white/90 text-lg md:text-2xl leading-relaxed text-center">
+                <p className="font-tilt text-white/90 text-lg md:text-2xl leading-relaxed text-left md:text-center">
                     SpaceUp is a community-driven unconference (the largest in India) that brings together students, educators, professionals, and space enthusiasts to exchange ideas and explore the future of space science.
                     <br /><br />
                     Designed to move beyond traditional conference formats, it encourages open discussions, collaboration, and active participation.
