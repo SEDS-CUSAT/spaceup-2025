@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { X, Download } from 'lucide-react';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all'); // all, verified, unverified
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [verifyingUsers, setVerifyingUsers] = useState(new Set());
 
   useEffect(() => {
     fetchData();
@@ -88,7 +91,64 @@ export default function AdminPage() {
     }
   };
 
+  const handleExport = () => {
+    // Define headers
+    const headers = [
+      'Name',
+      'Email',
+      'Phone',
+      'College',
+      'Year',
+      'Workshop',
+      'Attended Before',
+      'Amount',
+      'Transaction ID',
+      'Referral Source',
+      'Referral Code',
+      'Status',
+      'Registration Date'
+    ];
+
+    // Convert users data to CSV format
+    const csvContent = [
+      headers.join(','),
+      ...users.map(user => [
+        `"${user.name || ''}"`,
+        `"${user.email || ''}"`,
+        `"${user.whatsappNumber || ''}"`,
+        `"${user.collegeName || ''}"`,
+        `"${user.yearOfStudy || ''}"`,
+        `"${user.workshop || ''}"`,
+        `"${user.attendedBefore || ''}"`,
+        `"${user.amount || ''}"`,
+        `"${user.upiTransactionId || ''}"`,
+        `"${user.referralSource || ''}"`,
+        `"${user.referralCode || ''}"`,
+        `"${user.isVerified ? 'Verified' : 'Pending'}"`,
+        `"${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''}"`
+      ].join(','))
+    ].join('\n');
+
+    // Create a blob and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `spaceup-registrations_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleVerify = async (userId, isVerified) => {
+    setVerifyingUsers(prev => {
+      const next = new Set(prev);
+      next.add(userId);
+      return next;
+    });
+
     try {
       const res = await fetch(`/api/admin/users/${userId}/verify`, {
         method: 'PATCH',
@@ -105,13 +165,19 @@ export default function AdminPage() {
 
       if (res.ok) {
         // Refresh data
-        fetchData();
+        await fetchData();
       } else {
         const data = await res.json();
         alert(data.error || 'Failed to update verification status');
       }
     } catch (err) {
       alert('Network error. Please try again.');
+    } finally {
+      setVerifyingUsers(prev => {
+        const next = new Set(prev);
+        next.delete(userId);
+        return next;
+      });
     }
   };
 
@@ -180,12 +246,21 @@ export default function AdminPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded"
-          >
-            Logout
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={handleExport}
+              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded flex items-center gap-2"
+            >
+              <Download size={20} />
+              Export CSV
+            </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {/* Statistics */}
@@ -271,14 +346,12 @@ export default function AdminPage() {
                       {user.upiTransactionId}
                     </td>
                     <td className="px-4 py-3">
-                      <a
-                        href={user.paymentScreenshotUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-400 hover:text-blue-300"
+                      <button
+                        onClick={() => setSelectedImage(user.paymentScreenshotUrl)}
+                        className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
                       >
                         View
-                      </a>
+                      </button>
                     </td>
                     <td className="px-4 py-3">
                       {user.isVerified ? (
@@ -295,16 +368,22 @@ export default function AdminPage() {
                       {user.isVerified ? (
                         <button
                           onClick={() => handleVerify(user._id, false)}
-                          className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm"
+                          disabled={verifyingUsers.has(user._id)}
+                          className={`px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm cursor-pointer transition-all ${
+                            verifyingUsers.has(user._id) ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
                         >
-                          Unverify
+                          {verifyingUsers.has(user._id) ? 'Wait...' : 'Unverify'}
                         </button>
                       ) : (
                         <button
                           onClick={() => handleVerify(user._id, true)}
-                          className="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm"
+                          disabled={verifyingUsers.has(user._id)}
+                          className={`px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm cursor-pointer transition-all ${
+                            verifyingUsers.has(user._id) ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
                         >
-                          Verify
+                          {verifyingUsers.has(user._id) ? 'Wait...' : 'Verify'}
                         </button>
                       )}
                     </td>
@@ -319,6 +398,30 @@ export default function AdminPage() {
             )}
           </div>
         </div>
+
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm"
+            onClick={() => setSelectedImage(null)}
+          >
+            <div 
+              className="relative max-w-4xl max-h-[90vh] bg-gray-800 p-2 rounded-lg shadow-2xl"
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-4 -right-4 bg-red-600 text-white rounded-full p-2 hover:bg-red-700 shadow-lg transition-colors z-10"
+              >
+                <X size={20} />
+              </button>
+              <img 
+                src={selectedImage} 
+                alt="Payment Screenshot" 
+                className="max-w-full max-h-[85vh] object-contain rounded"
+              />
+            </div>
+          </div>
+        )}
 
         <div className="mt-4 text-gray-400 text-sm">
           Showing {filteredUsers.length} of {users.length} registrations
