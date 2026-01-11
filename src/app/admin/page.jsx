@@ -115,21 +115,21 @@ export default function AdminPage() {
     const csvContent = [
       headers.join(','),
       ...users.map(user => [
-        `${user.name || ''}`,
-        `${user.email || ''}`,
-        `${user.whatsappNumber || ''}`,
-        `${user.collegeName || ''}`,
-        `${user.yearOfStudy || ''}`,
-        `${user.workshop || ''}`,
-        `${user.attendedBefore || ''}`,
-        `${user.amount || ''}`,
-        `${user.upiTransactionId || ''}`,
-        `${user.referralSource || ''}`,
-        `${user.referralCode || ''}`,
-        `${user.isVerified ? 'Verified' : 'Pending'}`,
-        `${user.createdAt ? new Date(user.createdAt).toLocaleString() : ''}`,
-        `${user.verifiedAt ? new Date(user.verifiedAt).toLocaleString() : ''}`,
-        `${user.paymentScreenshotUrl || ''}`
+        `"${user.name || ''}"`,
+        `"${user.email || ''}"`,
+        `"${user.whatsappNumber || ''}"`,
+        `"${user.collegeName || ''}"`,
+        `"${user.yearOfStudy || ''}"`,
+        `"${user.workshop || ''}"`,
+        `"${user.attendedBefore || ''}"`,
+        `"${user.amount || ''}"`,
+        `"${user.upiTransactionId || ''}"`,
+        `"${user.referralSource || ''}"`,
+        `"${user.referralCode || ''}"`,
+        `"${user.isVerified ? 'Verified' : 'Pending'}"`,
+        `"${user.createdAt ? new Date(user.createdAt).toLocaleString() : ''}"`,
+        `"${user.verifiedAt ? new Date(user.verifiedAt).toLocaleString() : ''}"`,
+        `"${user.paymentScreenshotUrl || ''}"`
       ].join(','))
     ].join('\n');
 
