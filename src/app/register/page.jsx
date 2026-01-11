@@ -666,8 +666,9 @@ export default function RegisterPage() {
             <div className="bg-neutral-900/50 p-4 rounded-lg border border-neutral-800 mb-6 mt-4">
               <div className="text-center mb-4">
                 <p className="text-neutral-300 mb-2">Registration Fee</p>
-                <div className="text-4xl font-bold text-green-400">
-                  ₹{REGISTRATION_AMOUNT}
+                <div className="text-4xl font-bold text-green-400 flex items-center justify-center gap-2">
+                  <span className="text-2xl text-red-500/70 line-through">₹499</span>
+                  <span>₹{REGISTRATION_AMOUNT}</span>
                 </div>
               </div>
 
@@ -735,7 +736,7 @@ export default function RegisterPage() {
               <Input
                 id="upiTransactionId"
                 type="text"
-                placeholder="Enter Transaction ID"
+                placeholder="123456123456 (usually 12 numeric characters)"
                 className={cn(
                   "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
                   errors.upiTransactionId &&
