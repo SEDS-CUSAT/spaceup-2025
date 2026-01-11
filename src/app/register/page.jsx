@@ -735,9 +735,9 @@ export default function RegisterPage() {
             {/* UPI Transaction ID */}
             <div className="space-y-2">
               <Label htmlFor="upiTransactionId" className="text-neutral-200">
-                UPI Transaction ID{" "}
+                UPI Transaction ID / Ref No{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
-                <span className="text-yellow-500 font-bold ml-1">(Not your UPI id)</span>
+                <span className="text-xs text-yellow-500/80 ml-2">(Not your UPI ID)</span>
               </Label>
               <Input
                 id="upiTransactionId"
