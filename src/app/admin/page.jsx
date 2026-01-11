@@ -106,7 +106,9 @@ export default function AdminPage() {
       'Referral Source',
       'Referral Code',
       'Status',
-      'Registration Date'
+      'Registration Date',
+      'Verified At',
+      'Payment Screenshot URL'
     ];
 
     // Convert users data to CSV format
@@ -125,7 +127,9 @@ export default function AdminPage() {
         `"${user.referralSource || ''}"`,
         `"${user.referralCode || ''}"`,
         `"${user.isVerified ? 'Verified' : 'Pending'}"`,
-        `"${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : ''}"`
+        `"${user.createdAt ? new Date(user.createdAt).toLocaleString() : ''}"`,
+        `"${user.verifiedAt ? new Date(user.verifiedAt).toLocaleString() : ''}"`,
+        `"${user.paymentScreenshotUrl || ''}"`
       ].join(','))
     ].join('\n');
 
@@ -327,6 +331,7 @@ export default function AdminPage() {
                   <th className="px-4 py-3 text-left">Email</th>
                   <th className="px-4 py-3 text-left">College</th>
                   <th className="px-4 py-3 text-left">Workshop</th>
+                  <th className="px-4 py-3 text-left">Referral Code</th>
                   <th className="px-4 py-3 text-left">Amount</th>
                   <th className="px-4 py-3 text-left">Transaction ID</th>
                   <th className="px-4 py-3 text-left">Payment Screenshot</th>
@@ -341,6 +346,7 @@ export default function AdminPage() {
                     <td className="px-4 py-3 text-sm">{user.email}</td>
                     <td className="px-4 py-3 text-sm">{user.collegeName}</td>
                     <td className="px-4 py-3 text-sm">{user.workshop}</td>
+                    <td className="px-4 py-3 text-sm font-mono text-gray-400">{user.referralCode || '-'}</td>
                     <td className="px-4 py-3">₹{user.amount}</td>
                     <td className="px-4 py-3 text-sm font-mono">
                       {user.upiTransactionId}

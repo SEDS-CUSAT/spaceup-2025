@@ -33,6 +33,7 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Particles } from "@/components/ui/particles";
 
+const ORIGINAL_REGISTRATION_AMOUNT = 499;
 const REGISTRATION_AMOUNT = 399;
 
 export default function RegisterPage() {
@@ -667,7 +668,7 @@ export default function RegisterPage() {
               <div className="text-center mb-4">
                 <p className="text-neutral-300 mb-2">Registration Fee</p>
                 <div className="text-4xl font-bold text-green-400 flex items-center justify-center gap-2">
-                  <span className="text-2xl text-red-500/70 line-through">₹499</span>
+                  <span className="text-2xl text-red-500/70 line-through">₹{ORIGINAL_REGISTRATION_AMOUNT}</span>
                   <span>₹{REGISTRATION_AMOUNT}</span>
                 </div>
               </div>
