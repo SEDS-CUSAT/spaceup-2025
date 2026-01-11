@@ -736,7 +736,7 @@ export default function RegisterPage() {
               <Input
                 id="upiTransactionId"
                 type="text"
-                placeholder="123456123456 (usually 12 numeric characters)"
+                placeholder="123456123456"
                 className={cn(
                   "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
                   errors.upiTransactionId &&
