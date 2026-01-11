@@ -668,7 +668,11 @@ export default function RegisterPage() {
               <div className="text-center mb-4">
                 <p className="text-neutral-300 mb-2">Registration Fee</p>
                 <div className="text-4xl font-bold text-green-400 flex items-center justify-center gap-2">
-                  <span className="text-2xl text-red-500/70 line-through">₹{ORIGINAL_REGISTRATION_AMOUNT}</span>
+                  {ORIGINAL_REGISTRATION_AMOUNT > REGISTRATION_AMOUNT && (
+                    <span className="text-xl line-through text-red-500 opacity-70">
+                      ₹{ORIGINAL_REGISTRATION_AMOUNT}
+                    </span>
+                  )}
                   <span>₹{REGISTRATION_AMOUNT}</span>
                 </div>
               </div>
@@ -733,11 +737,12 @@ export default function RegisterPage() {
               <Label htmlFor="upiTransactionId" className="text-neutral-200">
                 UPI Transaction ID{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
+                <span className="text-yellow-500 font-bold ml-1">(Not your UPI id)</span>
               </Label>
               <Input
                 id="upiTransactionId"
                 type="text"
-                placeholder="123456123456"
+                placeholder="123123123123 (usually 12 digits)"
                 className={cn(
                   "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
                   errors.upiTransactionId &&

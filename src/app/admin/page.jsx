@@ -235,7 +235,7 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 cursor-pointer"
             >
               {loading ? 'Logging in...' : 'Login'}
             </button>
@@ -253,14 +253,14 @@ export default function AdminPage() {
           <div className="flex gap-4">
             <button
               onClick={handleExport}
-              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded flex items-center gap-2"
+              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded flex items-center gap-2 cursor-pointer"
             >
               <Download size={20} />
               Export CSV
             </button>
             <button
               onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded"
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded cursor-pointer"
             >
               Logout
             </button>
@@ -322,74 +322,82 @@ export default function AdminPage() {
         </div>
 
         {/* Users Table */}
-        <div className="bg-gray-800 rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-700">
+        <div className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 shadow-xl">
+          <div className="overflow-x-auto custom-scrollbar">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-900/50 text-gray-400 font-medium uppercase tracking-wider">
                 <tr>
-                  <th className="px-4 py-3 text-left">Name</th>
-                  <th className="px-4 py-3 text-left">Email</th>
-                  <th className="px-4 py-3 text-left">College</th>
-                  <th className="px-4 py-3 text-left">Workshop</th>
-                  <th className="px-4 py-3 text-left">Referral Code</th>
-                  <th className="px-4 py-3 text-left">Amount</th>
-                  <th className="px-4 py-3 text-left">Transaction ID</th>
-                  <th className="px-4 py-3 text-left">Payment Screenshot</th>
-                  <th className="px-4 py-3 text-left">Status</th>
-                  <th className="px-4 py-3 text-left">Actions</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Name</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Email</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">College</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Workshop</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Referral</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Amount</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Txn ID</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Proof</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Status</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-700">
                 {filteredUsers.map((user) => (
-                  <tr key={user._id} className="hover:bg-gray-700/50">
-                    <td className="px-4 py-3">{user.name}</td>
-                    <td className="px-4 py-3 text-sm">{user.email}</td>
-                    <td className="px-4 py-3 text-sm">{user.collegeName}</td>
-                    <td className="px-4 py-3 text-sm">{user.workshop}</td>
-                    <td className="px-4 py-3 text-sm font-mono text-gray-400">{user.referralCode || '-'}</td>
-                    <td className="px-4 py-3">₹{user.amount}</td>
-                    <td className="px-4 py-3 text-sm font-mono">
+                  <tr key={user._id} className="hover:bg-gray-700/30 transition-colors">
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-white">{user.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.email}</td>
+                    <td className="px-6 py-4 max-w-[200px] truncate text-gray-300" title={user.collegeName}>
+                      {user.collegeName}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.workshop}</td>
+                    <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-gray-400">
+                      {user.referralCode ? (
+                        <span className="bg-gray-700 px-2 py-1 rounded border border-gray-600">
+                          {user.referralCode}
+                        </span>
+                      ) : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">₹{user.amount}</td>
+                    <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-indigo-300">
                       {user.upiTransactionId}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <button
                         onClick={() => setSelectedImage(user.paymentScreenshotUrl)}
-                        className="text-blue-400 hover:text-blue-300 underline cursor-pointer"
+                        className="text-blue-400 hover:text-blue-300 text-xs font-medium border border-blue-500/30 hover:border-blue-500/50 px-2.5 py-1 rounded bg-blue-500/10 transition-all cursor-pointer"
                       >
-                        View
+                        View Image
                       </button>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       {user.isVerified ? (
-                        <span className="px-2 py-1 bg-green-900/50 text-green-300 rounded text-xs">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20">
                           Verified
                         </span>
                       ) : (
-                        <span className="px-2 py-1 bg-yellow-900/50 text-yellow-300 rounded text-xs">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">
                           Pending
                         </span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       {user.isVerified ? (
                         <button
                           onClick={() => handleVerify(user._id, false)}
                           disabled={verifyingUsers.has(user._id)}
-                          className={`px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm cursor-pointer transition-all ${
+                          className={`text-red-400 hover:text-red-300 hover:bg-red-500/10 px-2 py-1 rounded text-xs font-medium transition-all cursor-pointer ${
                             verifyingUsers.has(user._id) ? 'opacity-50 cursor-not-allowed' : ''
                           }`}
                         >
-                          {verifyingUsers.has(user._id) ? 'Wait...' : 'Unverify'}
+                          {verifyingUsers.has(user._id) ? '...' : 'Unverify'}
                         </button>
                       ) : (
                         <button
                           onClick={() => handleVerify(user._id, true)}
                           disabled={verifyingUsers.has(user._id)}
-                          className={`px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm cursor-pointer transition-all ${
+                          className={`text-green-400 hover:text-green-300 hover:bg-green-500/10 px-2 py-1 rounded text-xs font-medium transition-all cursor-pointer ${
                             verifyingUsers.has(user._id) ? 'opacity-50 cursor-not-allowed' : ''
                           }`}
                         >
-                          {verifyingUsers.has(user._id) ? 'Wait...' : 'Verify'}
+                          {verifyingUsers.has(user._id) ? '...' : 'Verify'}
                         </button>
                       )}
                     </td>
@@ -416,7 +424,7 @@ export default function AdminPage() {
             >
               <button 
                 onClick={() => setSelectedImage(null)}
-                className="absolute -top-4 -right-4 bg-red-600 text-white rounded-full p-2 hover:bg-red-700 shadow-lg transition-colors z-10"
+                className="absolute -top-4 -right-4 bg-red-600 text-white rounded-full p-2 hover:bg-red-700 shadow-lg transition-colors z-10 cursor-pointer"
               >
                 <X size={20} />
               </button>
