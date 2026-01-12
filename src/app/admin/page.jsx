@@ -17,6 +17,7 @@ export default function AdminPage() {
   const [filterStatus, setFilterStatus] = useState('all'); // all, verified, unverified
   const [selectedImage, setSelectedImage] = useState(null);
   const [verifyingUsers, setVerifyingUsers] = useState(new Set());
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
@@ -88,6 +89,8 @@ export default function AdminPage() {
     } catch (err) {
       console.error('Error fetching data:', err);
       setError('Failed to fetch data');
+    } finally {
+      setInitialLoading(false);
     }
   };
 
@@ -199,6 +202,15 @@ export default function AdminPage() {
     return matchesSearch && matchesFilter;
   });
 
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+        <span className="ml-4">Loading Admin Dashboard...</span>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
@@ -248,19 +260,19 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
           <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
             <button
               onClick={handleExport}
-              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded flex items-center gap-2 cursor-pointer"
+              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded flex items-center justify-center gap-2 cursor-pointer w-full sm:w-auto"
             >
               <Download size={20} />
               Export CSV
             </button>
             <button
               onClick={handleLogout}
-              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded cursor-pointer"
+              className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded cursor-pointer w-full sm:w-auto"
             >
               Logout
             </button>
@@ -329,9 +341,12 @@ export default function AdminPage() {
                 <tr>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Name</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Email</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">WhatsApp</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">College</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Year</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Workshop</th>
-                  <th className="px-6 py-4 text-left whitespace-nowrap">Referral</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Referral Code</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Referral Source</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Amount</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Txn ID</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Proof</th>
@@ -344,9 +359,11 @@ export default function AdminPage() {
                   <tr key={user._id} className="hover:bg-gray-700/30 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap font-medium text-white">{user.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.whatsappNumber}</td>
                     <td className="px-6 py-4 max-w-[200px] truncate text-gray-300" title={user.collegeName}>
                       {user.collegeName}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.yearOfStudy}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.workshop}</td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-gray-400">
                       {user.referralCode ? (
@@ -355,6 +372,7 @@ export default function AdminPage() {
                         </span>
                       ) : '-'}
                     </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.referralSource || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">₹{user.amount}</td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-indigo-300">
                       {user.upiTransactionId}
