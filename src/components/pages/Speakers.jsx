@@ -20,7 +20,7 @@ const Speakers = () => {
             {/* Speakers Grid - Arched Layout */}
             <div className="relative z-10 w-full max-w-7xl flex flex-wrap justify-center gap-8 gap-y-16 px-6">
                 {[
-                    { name: "Dr. A. Chandrasekhar", role: "Dean of R&D, IIST", offset: "lg:mt-0", image: "/A Chandrasekhar.jpeg" },
+                    { name: "A Chandrasekar", role: "Dean of R&D, IIST", offset: "lg:mt-0", image: "/A Chandrasekhar.jpeg" },
                     { name: "Shrushti Patil", role: "Space Biologist", offset: "lg:mt-0", image: "/Shrushti Patil pic.jpeg" }
                 ].map((speaker, index) => (
                     <div
