@@ -18,12 +18,10 @@ const Speakers = () => {
             </h2>
 
             {/* Speakers Grid - Arched Layout */}
-            <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 px-6">
+            <div className="relative z-10 w-full max-w-7xl flex flex-wrap justify-center gap-8 gap-y-16 px-6">
                 {[
-                    { name: "Dr. Nova Starr", role: "Astrophysicist", offset: "lg:mt-32" },
-                    { name: "Cpt. Orion", role: "Mission Commander", offset: "lg:mt-0" },
-                    { name: "Lyra Vega", role: "Exobiologist", offset: "lg:mt-0" },
-                    { name: "Astro Alex", role: "Rocket Engineer", offset: "lg:mt-32" }
+                    { name: "Dr. A. Chandrasekhar", role: "Dean of R&D, IIST", offset: "lg:mt-0", image: "/A Chandrasekhar.jpeg" },
+                    { name: "Shrushti Patil", role: "Space Biologist", offset: "lg:mt-0", image: "/Shrushti Patil pic.jpeg" }
                 ].map((speaker, index) => (
                     <div
                         key={index}
@@ -33,10 +31,11 @@ const Speakers = () => {
                         <div className="relative w-48 h-48 md:w-56 md:h-56 mb-8 transition-transform duration-300 group-hover:scale-105">
                             <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-purple-600 to-pink-600 blur-md opacity-70 group-hover:opacity-100 transition-opacity duration-500 animate-pulse-glow"></div>
                             <div className="relative w-full h-full rounded-full bg-[#2E1C3B] border-4 border-white/10 overflow-hidden flex items-center justify-center shadow-2xl">
-                                {/* Placeholder Icon */}
-                                <svg className="w-24 h-24 text-white/30" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                                </svg>
+                                <img
+                                    src={speaker.image}
+                                    alt={speaker.name}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                         </div>
 

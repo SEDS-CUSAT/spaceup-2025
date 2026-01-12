@@ -13,12 +13,13 @@ const Schedule = () => {
                 <div className="flex flex-col items-center lg:mt-32 order-2 lg:order-1 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                     <h3 className="font-nico text-purple-300 text-2xl md:text-3xl mb-8 tracking-widest drop-shadow-lg">Venue 2</h3>
                     {[
-                        { time: "10:30 AM", title: "Black Holes Deep Dive" },
-                        { time: "02:00 PM", title: "Nebula Workshop" }
+                        { time: "10:30 AM", title: "Opportunities in Space Biology", speaker: "Shrushti Patil" },
+                        { time: "02:00 PM", title: "Workshop 3", speaker: "TBA" }
                     ].map((item, i) => (
                         <div key={i} className="w-full bg-[#2E1C3B]/80 backdrop-blur-sm rounded-3xl border border-purple-500/20 mb-6 shadow-xl p-6 hover:scale-105 transition-transform duration-300 group">
                             <span className="block font-tilt text-purple-400 text-sm mb-1">{item.time}</span>
                             <h4 className="font-nico text-white text-lg md:text-xl group-hover:text-purple-200 transition-colors">{item.title}</h4>
+                            {item.speaker && <p className="font-tilt text-purple-300/80 text-sm mt-2">{item.speaker}</p>}
                         </div>
                     ))}
                 </div>
@@ -28,8 +29,8 @@ const Schedule = () => {
                     <h3 className="font-nico text-white text-3xl md:text-4xl mb-8 tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">Venue 1</h3>
                     {[
                         { time: "09:00 AM", title: "Opening Ceremony", color: "bg-[#7B4B74]" },
-                        { time: "10:00 AM", title: "Keynote: Mars Colonization", color: "bg-[#7B4B74]" },
-                        { time: "11:30 AM", title: "Panel: Future of Propulsion", color: "bg-[#2E1C3B]" },
+                        { time: "10:00 AM", title: "Microwave Remote Sensing: From RISAT to Chandrayaan", speaker: "Dr. Shiv Mohan", color: "bg-[#7B4B74]" },
+                        { time: "11:30 AM", title: "Atmospheric & Space Sciences", speaker: "Dr. A. Chandrasekhar", color: "bg-[#2E1C3B]" },
                         { time: "01:00 PM", title: "Lunch Break", color: "bg-[#2E1C3B]" },
                         { time: "02:30 PM", title: "Starship Engineering", color: "bg-[#7B4B74]" },
                         { time: "04:00 PM", title: "Closing Remarks", color: "bg-[#7B4B74]" }
@@ -37,6 +38,7 @@ const Schedule = () => {
                         <div key={i} className={`w-full ${item.color}/90 backdrop-blur-sm rounded-3xl border border-white/10 mb-6 shadow-xl p-6 hover:scale-105 transition-transform duration-300 group`}>
                             <span className="block font-tilt text-white/70 text-sm mb-1">{item.time}</span>
                             <h4 className="font-nico text-white text-xl md:text-2xl group-hover:text-white transition-colors">{item.title}</h4>
+                            {item.speaker && <p className="font-tilt text-white/80 text-sm mt-2">{item.speaker}</p>}
                         </div>
                     ))}
                 </div>
@@ -45,7 +47,7 @@ const Schedule = () => {
                 <div className="flex flex-col items-center lg:mt-32 order-3 lg:order-3 animate-fade-in-up" style={{ animationDelay: '400ms' }}>
                     <h3 className="font-nico text-purple-300 text-2xl md:text-3xl mb-8 tracking-widest drop-shadow-lg">Venue 3</h3>
                     {[
-                        { time: "11:00 AM", title: "Astro-Photography" },
+                        { time: "11:00 AM", title: "Vyomastra", speaker: "Workshop 2" },
                         { time: "03:00 PM", title: "Space Law Basics" }
                     ].map((item, i) => (
                         <div key={i} className="w-full bg-[#2E1C3B]/80 backdrop-blur-sm rounded-3xl border border-purple-500/20 mb-6 shadow-xl p-6 hover:scale-105 transition-transform duration-300 group">
