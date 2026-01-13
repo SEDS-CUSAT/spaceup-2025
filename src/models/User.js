@@ -37,6 +37,11 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please answer if you have attended before'],
     enum: ['Yes', 'No'],
   },
+  foodPreference: {
+    type: String,
+    required: [true, 'Please select your food preference'],
+    enum: ['Veg', 'Non-Veg'],
+  },
   referralSource: {
     type: String,
     required: false,

@@ -127,6 +127,7 @@ export default function RegisterPage() {
     formData.append("yearOfStudy", data.yearOfStudy);
     formData.append("workshop", data.workshop);
     formData.append("attendedBefore", data.attendedBefore);
+    formData.append("foodPreference", data.foodPreference);
     formData.append("referralSource", data.referralSource || "");
     formData.append("referralCode", data.referralCode || "");
     formData.append("upiTransactionId", data.upiTransactionId);
@@ -568,6 +569,46 @@ export default function RegisterPage() {
               {errors.attendedBefore && (
                 <span className="text-red-500 font-bold text-xs">
                   {errors.attendedBefore.message}
+                </span>
+              )}
+            </div>
+
+            {/* Food Preference */}
+            <div className="space-y-2">
+              <Label className="text-neutral-200">
+                Food Preference <span className="text-red-500 font-bold ml-1">*</span>
+              </Label>
+              <Controller
+                name="foodPreference"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex gap-6 pt-1">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="Veg"
+                        checked={field.value === "Veg"}
+                        onChange={field.onChange}
+                        className="w-4 h-4 text-neutral-600 bg-neutral-900 border-neutral-700 focus:ring-neutral-600 focus:ring-2"
+                      />
+                      <span className="text-neutral-300">Veg</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        value="Non-Veg"
+                        checked={field.value === "Non-Veg"}
+                        onChange={field.onChange}
+                        className="w-4 h-4 text-neutral-600 bg-neutral-900 border-neutral-700 focus:ring-neutral-600 focus:ring-2"
+                      />
+                      <span className="text-neutral-300">Non-Veg</span>
+                    </label>
+                  </div>
+                )}
+              />
+              {errors.foodPreference && (
+                <span className="text-red-500 font-bold text-xs">
+                  {errors.foodPreference.message}
                 </span>
               )}
             </div>
