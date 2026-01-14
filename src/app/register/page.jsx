@@ -64,6 +64,11 @@ export default function RegisterPage() {
     reset,
   } = useForm({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      attendedBefore: "No",
+      referralSource: "REMOVED",
+      workshop: "NOT-DECIDED",
+    },
   });
 
   const referralCodeValue = watch("referralCode");
@@ -144,8 +149,9 @@ export default function RegisterPage() {
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("whatsappNumber", data.whatsappNumber);
-    formData.append("collegeName", data.collegeName);
+    formData.append("collegeName", data.collegeName || "N/A"); // Ensure it's not null/undefined
     formData.append("yearOfStudy", data.yearOfStudy);
+    formData.append("educationalStatus", data.educationalStatus);
     formData.append("workshop", data.workshop);
     formData.append("attendedBefore", data.attendedBefore);
     formData.append("foodPreference", data.foodPreference);
@@ -524,16 +530,67 @@ export default function RegisterPage() {
               )}
             </div>
 
+            {/* Educational Status */}
+             <div className="space-y-2">
+              <Label htmlFor="educationalStatus" className="text-neutral-200">
+                Educational Status{" "}
+                <span className="text-red-500 font-bold ml-1">*</span>
+              </Label>
+              <Controller
+                name="educationalStatus"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(val) => {
+                      field.onChange(val);
+                      // Clear or reset dependent fields
+                      if (val === "Graduated" || val === "Other") {
+                         setValue("collegeName", "N/A"); // Auto remove
+                         setValue("yearOfStudy", val === "Graduated" ? "Graduated" : "Other"); 
+                      } else {
+                         setValue("collegeName", ""); // Reset so user types
+                         // yearOfStudy logic is handled by available options, but we might want to reset it
+                         setValue("yearOfStudy", "");
+                      }
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100",
+                        errors.educationalStatus &&
+                          "border-red-500 focus:ring-red-500",
+                      )}
+                    >
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-neutral-900 border-neutral-800 text-neutral-100">
+                      <SelectItem value="School Student">School Student</SelectItem>
+                      <SelectItem value="College Student">College Student</SelectItem>
+                      <SelectItem value="Graduated">Graduated</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.educationalStatus && (
+                <span className="text-red-500 font-bold text-xs">
+                  {errors.educationalStatus.message}
+                </span>
+              )}
+            </div>
+
             {/* College Name */}
+            {(watch("educationalStatus") === "School Student" || watch("educationalStatus") === "College Student") && (
             <div className="space-y-2">
               <Label htmlFor="collegeName" className="text-neutral-200">
-                College Name{" "}
+                {watch("educationalStatus") === "School Student" ? "School Name" : "College Name"}{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
               </Label>
               <Input
                 id="collegeName"
                 type="text"
-                placeholder="University/College Name"
+                placeholder={watch("educationalStatus") === "School Student" ? "Enter your school name" : "University/College Name"}
                 className={cn(
                   "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
                   errors.collegeName && "border-red-500 focus:ring-red-500",
@@ -546,11 +603,15 @@ export default function RegisterPage() {
                 </span>
               )}
             </div>
-
+            )}
+             {/* Hidden input for collegeName if not visible, to satisfy backend requirement essentially */}
+             {/* Actually we are setting it in the onChange of educationalStatus but if we need it here */}
+             
             {/* Year of Study */}
+             {(watch("educationalStatus") === "School Student" || watch("educationalStatus") === "College Student") && (
             <div className="space-y-2">
               <Label htmlFor="yearOfStudy" className="text-neutral-200">
-                Year of Study{" "}
+                 {watch("educationalStatus") === "School Student" ? "Class" : "Year of Study"}{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
               </Label>
               <Controller
@@ -559,7 +620,9 @@ export default function RegisterPage() {
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
+                    // defaultValue={field.value}
+                    disabled={watch("educationalStatus") === "Graduated" || watch("educationalStatus") === "Other"}
                   >
                     <SelectTrigger
                       className={cn(
@@ -568,16 +631,38 @@ export default function RegisterPage() {
                           "border-red-500 focus:ring-red-500",
                       )}
                     >
-                      <SelectValue placeholder="Select Year" />
+                      <SelectValue placeholder={watch("educationalStatus") === "School Student" ? "Select Class" : "Select Year"} />
                     </SelectTrigger>
                     <SelectContent className="bg-neutral-900 border-neutral-800 text-neutral-100">
-                      <SelectItem value="1st Year">1st Year</SelectItem>
-                      <SelectItem value="2nd Year">2nd Year</SelectItem>
-                      <SelectItem value="3rd Year">3rd Year</SelectItem>
-                      <SelectItem value="4th Year">4th Year</SelectItem>
-                      <SelectItem value="5th Year">5th Year</SelectItem>
-                      <SelectItem value="Graduated">Graduated</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                       {watch("educationalStatus") === "School Student" && (
+                          <>
+                            <SelectItem value="6th Class">6th Class</SelectItem>
+                            <SelectItem value="7th Class">7th Class</SelectItem>
+                            <SelectItem value="8th Class">8th Class</SelectItem>
+                            <SelectItem value="9th Class">9th Class</SelectItem>
+                            <SelectItem value="10th Class">10th Class</SelectItem>
+                            <SelectItem value="11th Class">11th Class</SelectItem>
+                            <SelectItem value="12th Class">12th Class</SelectItem>
+                          </>
+                       )}
+                       {watch("educationalStatus") === "College Student" && (
+                          <>
+                            <SelectItem value="1st Year">1st Year</SelectItem>
+                            <SelectItem value="2nd Year">2nd Year</SelectItem>
+                            <SelectItem value="3rd Year">3rd Year</SelectItem>
+                            <SelectItem value="4th Year">4th Year</SelectItem>
+                            <SelectItem value="5th Year">5th Year</SelectItem>
+                          </>
+                       )}
+                       {watch("educationalStatus") === "Graduated" && (
+                           <SelectItem value="Graduated">Graduated</SelectItem>
+                       )}
+                        {watch("educationalStatus") === "Other" && (
+                           <SelectItem value="Other">Other</SelectItem>
+                       )}
+                       {!watch("educationalStatus") && (
+                           <SelectItem value="Other">Select Status First</SelectItem>
+                       )}
                     </SelectContent>
                   </Select>
                 )}
@@ -588,6 +673,7 @@ export default function RegisterPage() {
                 </span>
               )}
             </div>
+             )}
 
             {/* Workshop */}
             <input
@@ -597,45 +683,11 @@ export default function RegisterPage() {
             />
 
             {/* Attended Before */}
-            <div className="space-y-2">
-              <Label className="text-neutral-200">
-                Have you attended SpaceUp before?{" "}
-                <span className="text-red-500 font-bold ml-1">*</span>
-              </Label>
-              <Controller
-                name="attendedBefore"
-                control={control}
-                render={({ field }) => (
-                  <div className="flex gap-6 pt-1">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="Yes"
-                        checked={field.value === "Yes"}
-                        onChange={field.onChange}
-                        className="w-4 h-4 text-neutral-600 bg-neutral-900 border-neutral-700 focus:ring-neutral-600 focus:ring-2"
-                      />
-                      <span className="text-neutral-300">Yes</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="No"
-                        checked={field.value === "No"}
-                        onChange={field.onChange}
-                        className="w-4 h-4 text-neutral-600 bg-neutral-900 border-neutral-700 focus:ring-neutral-600 focus:ring-2"
-                      />
-                      <span className="text-neutral-300">No</span>
-                    </label>
-                  </div>
-                )}
-              />
-              {errors.attendedBefore && (
-                <span className="text-red-500 font-bold text-xs">
-                  {errors.attendedBefore.message}
-                </span>
-              )}
-            </div>
+            <input
+              type="hidden"
+              value="No"
+              {...register("attendedBefore")}
+            />
 
             {/* Food Preference */}
             <div className="space-y-2">
@@ -679,29 +731,11 @@ export default function RegisterPage() {
             </div>
 
             {/* Referral Source */}
-            <div className="space-y-2">
-              <Label htmlFor="referralSource" className="text-neutral-200">
-                How did you hear about this event?{" "}
-                <span className="text-xs text-neutral-500 ml-2">
-                  (Optional)
-                </span>
-              </Label>
-              <Input
-                id="referralSource"
-                type="text"
-                placeholder="Social Media, Friend, Poster, etc."
-                className={cn(
-                  "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
-                  errors.referralSource && "border-red-500 focus:ring-red-500",
-                )}
-                {...register("referralSource")}
-              />
-              {errors.referralSource && (
-                <span className="text-red-500 font-bold text-xs">
-                  {errors.referralSource.message}
-                </span>
-              )}
-            </div>
+            <input
+              type="hidden"
+              value="REMOVED"
+              {...register("referralSource")}
+            />
 
             {/* Referral Code */}
             <div className="space-y-2">

@@ -100,6 +100,7 @@ export default function AdminPage() {
       'Name',
       'Email',
       'Phone',
+      'Educational Status',
       'College',
       'Year',
       'Food Preference',
@@ -122,6 +123,7 @@ export default function AdminPage() {
         `"${user.name || ''}"`,
         `"${user.email || ''}"`,
         `"${user.whatsappNumber || ''}"`,
+        `"${user.educationalStatus || ''}"`,
         `"${user.collegeName || ''}"`,
         `"${user.yearOfStudy || ''}"`,
         `"${user.foodPreference || ''}"`,
@@ -344,6 +346,7 @@ export default function AdminPage() {
                   <th className="px-6 py-4 text-left whitespace-nowrap">Name</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Email</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">WhatsApp</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Educational Status</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">College</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Year</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Food Preference</th>
@@ -363,6 +366,7 @@ export default function AdminPage() {
                     <td className="px-6 py-4 whitespace-nowrap font-medium text-white">{user.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.email}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.whatsappNumber}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.educationalStatus || '-'}</td>
                     <td className="px-6 py-4 max-w-[200px] truncate text-gray-300" title={user.collegeName}>
                       {user.collegeName}
                     </td>

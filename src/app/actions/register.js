@@ -119,10 +119,13 @@ export async function registerUser(formData) {
       whatsappNumber: formData.get('whatsappNumber'),
       collegeName: formData.get('collegeName'),
       yearOfStudy: formData.get('yearOfStudy'),
+      educationalStatus: formData.get('educationalStatus'),
       workshop: 'NOT-DECIDED', // Enforce default value
-      attendedBefore: formData.get('attendedBefore'),
+      // attendedBefore: formData.get('attendedBefore'),
+      attendedBefore: 'No', // Enforce default value
       foodPreference: formData.get('foodPreference'),
-      referralSource: formData.get('referralSource'),
+      // referralSource: formData.get('referralSource'),
+      referralSource: 'REMOVED', // Enforce default value
       referralCode: formData.get('referralCode'),
       upiTransactionId: formData.get('upiTransactionId'),
       amount: formData.get('amount'),
