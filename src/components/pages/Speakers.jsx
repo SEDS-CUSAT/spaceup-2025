@@ -49,6 +49,30 @@ const Speakers = () => {
                             "Microgravity researcher with ResearchSat.",
                             "Leading 'Beyond Petri Dish' initiative."
                         ]
+                    },
+                    {
+                        name: "Swetha M",
+                        role: "Speaker",
+                        designation: "Aeronautical Engineer & Astronaut Candidate",
+                        image: "/Swetha pic.jfif",
+                        topic: "From classroom to cosmos",
+                        bio: [
+                            "B.Tech in Aeronautical Engineering.",
+                            "Interned at ISRO's LPSC on rocket propulsion.",
+                            "Expert in UAV design & CFD analysis (ANSYS, CATIA)."
+                        ]
+                    },
+                    {
+                        name: "Mr. Sarath Lal",
+                        role: "Speaker",
+                        designation: "Science Educator & YouTuber",
+                        image: "/Sarath lal.jpg",
+                        topic: "Advancing Physics & Science",
+                        bio: [
+                            "Dedicated to advancing physics education.",
+                            "Promotes theoretical science through digital media.",
+                            "Science Educator and YouTuber."
+                        ]
                     }
                 ].map((speaker, index) => (
                     <div
