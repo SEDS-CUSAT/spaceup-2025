@@ -1,120 +1,103 @@
 
 const Speakers = () => {
     return (
-        <div id="speakers" className="relative w-full min-h-screen z-10 py-20 px-2 md:px-8 flex flex-col items-center overflow-hidden">
+        <div id="speakers" className="relative w-full min-h-screen z-10 py-24 px-4 md:px-8 flex flex-col items-center overflow-hidden bg-black/40">
 
-            {/* Airplane Background - Spanning across */}
-            <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
-                <img
-                    src="/airoplane.png"
-                    alt="Airplane"
-                    className="w-full max-w-6xl object-contain opacity-90 scale-100 md:scale-100 translate-y-10 md:translate-y-20"
-                />
-            </div>
-
+            {/* Deep Space Background Effects */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent opacity-50 pointer-events-none"></div>
+            
             {/* Title */}
-            <h2 className="relative z-10 font-nico text-white text-4xl sm:text-5xl md:text-7xl mb-12 md:mb-24 text-center drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] animate-fade-in-up">
+            <h2 className="relative z-10 font-nico text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-5xl md:text-7xl mb-20 text-center drop-shadow-[0_0_25px_rgba(168,85,247,0.5)] animate-fade-in-up">
                 Speakers
             </h2>
 
-            {/* Speakers Flip Cards */}
-            <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 perspective-1000">
+            {/* Grid Container */}
+            <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 perspective-1000">
                 {[
                     {
                         name: "Dr. Shiv Mohan",
-                        role: "Chief Guest & Speaker (Talk Session 1)",
-                        designation: "Former Project Director RISAT/ISRO; Visiting Professor at CEPT and Gujarat University; IEEE GRSS India Liaison.",
+                        role: "Chief Guest & Speaker",
+                        designation: "Former Project Director RISAT/ISRO",
                         image: "/Shiv Mohan pic.jpg",
-                        topic: "Microwave Remote Sensing: From RISAT to Chandrayaan: Exploring Earth and the Moon with Radar",
+                        topic: "Microwave Remote Sensing: RISAT to Chandrayaan",
                         bio: [
-                            "He served at ISRO for over 33 years (1978–2011), contributing extensively to microwave and radar remote sensing technologies.",
-                            "He was the Chief Architect and Project Director of India's first RISAT (Radar Imaging Satellite) utilization program.",
-                            "He played a lead role in planetary science missions, contributing to the Chandrayaan-1 Mini-SAR lunar water-ice detection model and the Chandrayaan-2 dual-frequency SAR payload.",
-                            "He has authored over 320 research publications and books like Chandrayaan-1 Mini SAR and Smart Buildings and Cities Using Remote Sensing and GIS."
+                            "33+ years at ISRO, leading microwave remote sensing.",
+                            "Architect of India's RISAT program.",
+                            "Key contributor to Chandrayaan-1 & 2 missions."
                         ]
                     },
                     {
                         name: "Dr. A. Chandrashekhar",
                         role: "Speaker",
-                        designation: "Outstanding Professor at IIST and Dean of Research and Development.",
+                        designation: "Outstanding Professor at IIST",
                         image: "/A Chandrasekhar.jpeg",
                         topic: "Atmospheric & Space Sciences",
                         bio: [
-                            "He holds a PhD from IISc Bangalore and achieved University First Rank during his Master's in Meteorology.",
-                            "He spent over two decades at IIT Kharagpur, where he headed the Center for Ocean River Atmosphere and Land Sciences (CORAL).",
-                            "With nearly 38 years of teaching experience, he has published seventy journal papers and authored the textbook Basics of Atmospheric Science.",
-                            "He received the Astronautical Society of India Award for his contributions to Space Sciences."
+                            "Dean of R&D at IIST with 38 years teaching exp.",
+                            "Former Head of CORAL at IIT Kharagpur.",
+                            "ASI Awardee for contributions to Space Sciences."
                         ]
                     },
                     {
                         name: "Shrushti Patil",
-                        role: "Workshop",
-                        designation: "Founder of She In Space; R&D Astronaut Candidate at Titans Space Industries.",
+                        role: "Workshop Lead",
+                        designation: "Founder, She In Space",
                         image: "/Shrushti Patil pic.jpeg",
-                        topic: "Opportunities in space biology, with a special focus on how science communication plays a critical role in shaping awareness, careers, and public engagement in emerging space sciences.",
+                        topic: "Space Biology & Science Comm.",
                         bio: [
-                            "She works at the intersection of life sciences, microgravity research, and space exploration.",
-                            "She has been part of two space missions with ResearchSat (Australia), focusing on life-science experiments in microgravity.",
-                            "Her academic background is in Environmental Sciences and Biodiversity.",
-                            "She leads science communication initiatives such as 'Beyond Petri Dish' and 'Space Life Simplified'."
+                            "R&D Astronaut Candidate at Titans Space Industries.",
+                            "Microgravity researcher with ResearchSat.",
+                            "Leading 'Beyond Petri Dish' initiative."
                         ]
                     }
                 ].map((speaker, index) => (
                     <div
                         key={index}
-                        className="group relative h-[600px] w-full [perspective:1000px] animate-fade-in-up"
-                        style={{ animationDelay: `${index * 200}ms` }}
+                        className="group relative flex flex-col items-center p-6 md:p-8 rounded-[2rem] bg-white/5 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-purple-500/50 hover:shadow-[0_0_40px_-10px_rgba(168,85,247,0.3)] transition-all duration-500 hover:-translate-y-2 animate-fade-in-up"
+                        style={{ animationDelay: `${index * 150}ms` }}
                     >
-                        {/* Card Inner Container - Handles Rotation */}
-                        <div className="relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)] shadow-2xl rounded-[2rem]">
+                        {/* Glowing Ring Avatar */}
+                        <div className="relative mb-6">
+                            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 blur-md opacity-50 group-hover:opacity-100 transition-opacity duration-500 animate-pulse-glow"></div>
+                            <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border-2 border-white/20 p-1 bg-black/50">
+                                <img
+                                    src={speaker.image}
+                                    alt={speaker.name}
+                                    className="w-full h-full rounded-full object-cover grayscale-[20%] group-hover:grayscale-0 transition-all duration-500 group-hover:scale-110"
+                                />
+                            </div>
+                        </div>
 
-                            {/* FRONT SIDE */}
-                            <div className="absolute inset-0 h-full w-full rounded-[2rem] overflow-hidden bg-[#2E1C3B] border border-white/10 [backface-visibility:hidden]">
-                                {/* Image Cover */}
-                                <div className="h-full w-full">
-                                    <img
-                                        src={speaker.image}
-                                        alt={speaker.name}
-                                        className="h-full w-full object-cover opacity-90 transition-transform duration-700 group-hover:scale-110"
-                                    />
-                                    {/* Overlay Gradient for Text Readability */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-[#1a1025] via-transparent to-transparent opacity-90"></div>
-                                </div>
-
-                                {/* Front Content - Bottom Aligned */}
-                                <div className="absolute bottom-0 left-0 w-full p-8 text-center bg-black/30 backdrop-blur-sm border-t border-white/10">
-                                    <h3 className="font-nico text-white text-2xl mb-2 drop-shadow-lg">{speaker.name}</h3>
-                                    {/* <p className="font-tilt text-purple-300 text-sm font-bold uppercase tracking-wider mb-2">{speaker.role}</p> */}
-                                    <p className="font-tilt text-white/80 text-xs md:text-sm line-clamp-2">{speaker.designation}</p>
-                                </div>
+                        {/* Content */}
+                        <div className="text-center w-full">
+                            <h3 className="font-nico text-white text-2xl md:text-3xl mb-1 tracking-wide group-hover:text-purple-300 transition-colors">
+                                {speaker.name}
+                            </h3>
+                            <p className="font-tilt text-purple-400 text-sm font-bold tracking-widest uppercase mb-4">
+                                {speaker.role}
+                            </p>
+                            
+                            {/* Topic Badge */}
+                            <div className="inline-block bg-purple-900/30 border border-purple-500/30 rounded-full px-4 py-1.5 mb-6">
+                                <p className="font-tilt text-purple-200 text-xs md:text-sm italic">
+                                    "{speaker.topic}"
+                                </p>
                             </div>
 
-                            {/* BACK SIDE */}
-                            <div className="absolute inset-0 h-full w-full rounded-[2rem] bg-[#1E112A]/95 text-white px-8 pb-8 [transform:rotateY(180deg)] [backface-visibility:hidden] border border-purple-500/30 flex flex-col overflow-y-auto">
-                                <h3 className="font-nico text-purple-300 text-2xl pt-8 pb-4 text-center sticky top-0 bg-[#1E112A] z-10 border-b border-white/10">
-                                    {speaker.name}
-                                </h3>
-
-                                <div className="mb-6 flex-grow">
-                                    <h4 className="font-tilt text-purple-400 text-sm italic mb-3 text-center">{speaker.designation}</h4>
-                                    <ul className="space-y-3">
-                                        {speaker.bio.map((point, i) => (
-                                            <li key={i} className="font-tilt text-white/90 text-sm leading-relaxed flex items-start text-left">
-                                                <span className="mr-2 text-purple-500 mt-1">➤</span>
-                                                <span className="opacity-90">{point}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-
-                                <div className="mt-auto bg-purple-900/20 rounded-xl p-4 border border-purple-500/20 shrink-0">
-                                    <h4 className="font-nico text-purple-300 text-sm mb-1 uppercase tracking-widest">Topic</h4>
-                                    <p className="font-tilt text-white italic text-sm">
-                                        "{speaker.topic}"
-                                    </p>
-                                </div>
+                            {/* Bio List */}
+                            <div className="w-full bg-black/20 rounded-xl p-4 border border-white/5 text-left">
+                                <p className="font-tilt text-white/70 text-xs mb-3 text-center border-b border-white/10 pb-2">
+                                    {speaker.designation}
+                                </p>
+                                <ul className="space-y-2">
+                                    {speaker.bio.map((point, i) => (
+                                        <li key={i} className="flex items-start font-tilt text-gray-300 text-xs md:text-sm leading-relaxed">
+                                            <span className="text-pink-500 mr-2 mt-0.5">❖</span>
+                                            {point}
+                                        </li>
+                                    ))}
+                                </ul>
                             </div>
-
                         </div>
                     </div>
                 ))}
