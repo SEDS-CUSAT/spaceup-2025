@@ -20,19 +20,19 @@ const Speakers = () => {
             {/* Speakers Flip Cards */}
             <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 lg:grid-cols-2 gap-12 px-6 perspective-1000">
                 {[
-                    // {
-                    //     name: "Dr. Shiv Mohan",
-                    //     role: "Chief Guest & Speaker (Talk Session 1)",
-                    //     designation: "Former Project Director RISAT/ISRO; Visiting Professor at CEPT and Gujarat University; IEEE GRSS India Liaison.",
-                    //     image: "/mesac550sbi.jpeg",
-                    //     topic: "Microwave Remote Sensing: From RISAT to Chandrayaan: Exploring Earth and the Moon with Radar",
-                    //     bio: [
-                    //         "He served at ISRO for over 33 years (1978–2011), contributing extensively to microwave and radar remote sensing technologies.",
-                    //         "He was the Chief Architect and Project Director of India's first RISAT (Radar Imaging Satellite) utilization program.",
-                    //         "He played a lead role in planetary science missions, contributing to the Chandrayaan-1 Mini-SAR lunar water-ice detection model and the Chandrayaan-2 dual-frequency SAR payload.",
-                    //         "He has authored over 320 research publications and books like Chandrayaan-1 Mini SAR and Smart Buildings and Cities Using Remote Sensing and GIS."
-                    //     ]
-                    // },
+                    {
+                        name: "Dr. Shiv Mohan",
+                        role: "Chief Guest & Speaker (Talk Session 1)",
+                        designation: "Former Project Director RISAT/ISRO; Visiting Professor at CEPT and Gujarat University; IEEE GRSS India Liaison.",
+                        image: "/Shiv Mohan pic.jpg",
+                        topic: "Microwave Remote Sensing: From RISAT to Chandrayaan: Exploring Earth and the Moon with Radar",
+                        bio: [
+                            "He served at ISRO for over 33 years (1978–2011), contributing extensively to microwave and radar remote sensing technologies.",
+                            "He was the Chief Architect and Project Director of India's first RISAT (Radar Imaging Satellite) utilization program.",
+                            "He played a lead role in planetary science missions, contributing to the Chandrayaan-1 Mini-SAR lunar water-ice detection model and the Chandrayaan-2 dual-frequency SAR payload.",
+                            "He has authored over 320 research publications and books like Chandrayaan-1 Mini SAR and Smart Buildings and Cities Using Remote Sensing and GIS."
+                        ]
+                    },
                     {
                         name: "Dr. A. Chandrashekhar",
                         role: "Speaker (Talk Session 2)",
