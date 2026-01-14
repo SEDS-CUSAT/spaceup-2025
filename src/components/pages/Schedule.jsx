@@ -16,7 +16,7 @@ const Schedule = () => {
                 <TimelineItem time="9:15 AM - 9:40 AM" title="Inauguration" variant="purple" />
 
                 {/* 9:40 - 10:00 Refreshments */}
-                <TimelineBreak time="9:40 AM - 10:00 AM" title="Refreshments" icon="☕" />
+                <TimelineBreak time="9:40 AM - 10:00 AM" title="Refreshments" />
 
                 {/* 10:00 - 10:55 Speaker 1 */}
                 <TimelineItem 
@@ -35,7 +35,7 @@ const Schedule = () => {
                 />
 
                 {/* 12:00 - 1:15 Lunch */}
-                <TimelineBreak time="12:00 PM - 01:15 PM" title="Lunch Break" icon="🍕" />
+                <TimelineBreak time="12:00 PM - 01:15 PM" title="Lunch Break" />
 
                 {/* 1:30 - 2:00 Concurrent: Interactive + Fun Zone */}
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up">
