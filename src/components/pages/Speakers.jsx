@@ -1,13 +1,13 @@
 
 const Speakers = () => {
     return (
-        <div id="speakers" className="relative w-full min-h-screen z-10 py-24 px-4 md:px-8 flex flex-col items-center overflow-hidden bg-black/40">
+        <div id="speakers" className="relative w-full min-h-screen z-10 py-20 px-4 md:px-8 flex flex-col items-center overflow-hidden bg-black/40">
 
             {/* Deep Space Background Effects */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent opacity-50 pointer-events-none"></div>
             
             {/* Title */}
-            <h2 className="relative z-10 font-nico text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-5xl md:text-7xl mb-20 text-center drop-shadow-[0_0_25px_rgba(168,85,247,0.5)] animate-fade-in-up">
+            <h2 className="relative z-10 font-nico text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600 text-4xl sm:text-5xl md:text-7xl mb-12 md:mb-20 text-center drop-shadow-[0_0_25px_rgba(168,85,247,0.5)] animate-fade-in-up">
                 Speakers
             </h2>
 

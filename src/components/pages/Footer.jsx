@@ -19,7 +19,7 @@ const Footer = () => {
                 </div>
 
                 {/* Navigation Links - Creative "Orbit" Layout concept (visualized as a clean row for usability) */}
-                <div className="flex flex-wrap justify-center gap-6 md:gap-12 mb-10">
+                <div className="flex flex-wrap justify-center gap-4 md:gap-12 mb-8 md:mb-10">
                     {[
                         { label: 'Home', href: '#' },
                         { label: 'About', href: '#about' },
