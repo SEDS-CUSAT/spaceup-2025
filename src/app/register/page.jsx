@@ -34,7 +34,7 @@ import Link from "next/link";
 import { Particles } from "@/components/ui/particles";
 
 const ORIGINAL_REGISTRATION_AMOUNT = 499;
-const REGISTRATION_AMOUNT = 399;
+const DISCOUNTED_REGISTRATION_AMOUNT = 449;
 
 export default function RegisterPage() {
   const containerRef = useRef(null);
@@ -42,6 +42,9 @@ export default function RegisterPage() {
   const [isRegistered, setIsRegistered] = useState(false);
   const [referralStatus, setReferralStatus] = useState("idle"); // idle, verifying, valid, invalid
   const [referralFeedback, setReferralFeedback] = useState("");
+  const [registrationAmount, setRegistrationAmount] = useState(
+    ORIGINAL_REGISTRATION_AMOUNT,
+  );
 
   useEffect(() => {
     const registered = localStorage.getItem("spaceup_registered");
@@ -61,25 +64,36 @@ export default function RegisterPage() {
     reset,
   } = useForm({
     resolver: zodResolver(registerSchema),
+    defaultValues: {
+      attendedBefore: "No",
+      referralSource: "REMOVED",
+      workshop: "NOT-DECIDED",
+    },
   });
 
   const referralCodeValue = watch("referralCode");
+  const previousReferralCodeRef = useRef(referralCodeValue);
 
   // Reset referral status when code changes
   useEffect(() => {
-    if (!referralCodeValue) {
-      setReferralStatus("idle");
-      setReferralFeedback("");
-    } else if (referralStatus === "valid" || referralStatus === "invalid") {
-      // If user types after verification, reset to idle (require re-verification)
-      // Check if the current value matches the verified/invalid one?
-      // Actually simpler: if code changes, reset status to idle.
-      // But this effect runs on every keystroke.
-      // So we check if status is NOT idle, then set it to idle.
-      setReferralStatus("idle");
-      setReferralFeedback("");
+    // Only run this logic if the referral code has actually changed
+    // This prevents the effect from running when other dependencies (like referralStatus) change
+    if (referralCodeValue !== previousReferralCodeRef.current) {
+      if (!referralCodeValue) {
+        setReferralStatus("idle");
+        setReferralFeedback("");
+        setRegistrationAmount(ORIGINAL_REGISTRATION_AMOUNT);
+        setValue("amount", ORIGINAL_REGISTRATION_AMOUNT);
+      } else if (referralStatus === "valid" || referralStatus === "invalid") {
+        setReferralStatus("idle");
+        setReferralFeedback("");
+        setRegistrationAmount(ORIGINAL_REGISTRATION_AMOUNT);
+        setValue("amount", ORIGINAL_REGISTRATION_AMOUNT);
+      }
+      // Update the ref to the current value
+      previousReferralCodeRef.current = referralCodeValue;
     }
-  }, [referralCodeValue]);
+  }, [referralCodeValue, referralStatus, setValue]);
 
   const handleVerifyReferral = async () => {
     const code = getValues("referralCode");
@@ -92,17 +106,27 @@ export default function RegisterPage() {
       const result = await verifyReferralCode(code);
       if (result.success && result.valid) {
         setReferralStatus("valid");
-        setReferralFeedback(`You are referred by: ${result.data?.name || "Ambassador"}`);
-        toast.success(`Valid referral code from ${result.data?.name || "Ambassador"}`);
+        setReferralFeedback(
+          `You are referred by: ${result.data?.name || "Ambassador"}`,
+        );
+        toast.success(
+          `Valid referral code from ${result.data?.name || "Ambassador"}`,
+        );
+        setRegistrationAmount(DISCOUNTED_REGISTRATION_AMOUNT);
+        setValue("amount", DISCOUNTED_REGISTRATION_AMOUNT);
       } else {
         setReferralStatus("invalid");
         setReferralFeedback(result.error || "Invalid referral code");
         toast.error(result.error || "Invalid referral code");
+        setRegistrationAmount(ORIGINAL_REGISTRATION_AMOUNT);
+        setValue("amount", ORIGINAL_REGISTRATION_AMOUNT);
       }
     } catch (error) {
       setReferralStatus("invalid");
       setReferralFeedback("Error verifying code");
       toast.error("Error verifying code");
+      setRegistrationAmount(ORIGINAL_REGISTRATION_AMOUNT);
+      setValue("amount", ORIGINAL_REGISTRATION_AMOUNT);
     }
   };
 
@@ -113,7 +137,9 @@ export default function RegisterPage() {
   const onSubmit = async (data) => {
     // Check if referral code needs verification
     if (data.referralCode && referralStatus !== "valid") {
-      toast.error("Please verify your referral code before submitting the form.");
+      toast.error(
+        "Please verify your referral code before submitting the form.",
+      );
       return;
     }
 
@@ -123,8 +149,9 @@ export default function RegisterPage() {
     formData.append("name", data.name);
     formData.append("email", data.email);
     formData.append("whatsappNumber", data.whatsappNumber);
-    formData.append("collegeName", data.collegeName);
+    formData.append("collegeName", data.collegeName || "N/A"); // Ensure it's not null/undefined
     formData.append("yearOfStudy", data.yearOfStudy);
+    formData.append("educationalStatus", data.educationalStatus);
     formData.append("workshop", data.workshop);
     formData.append("attendedBefore", data.attendedBefore);
     formData.append("foodPreference", data.foodPreference);
@@ -162,9 +189,9 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative w-full overflow-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar">
         <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
-        style={{ backgroundImage: `url('/BG.jpg')` }}
-      />
+          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+          style={{ backgroundImage: `url('/BG.jpg')` }}
+        />
         <ScrollProgress className="top-0" />
         <div className="absolute top-8 left-8 z-50">
           <Link href="/">
@@ -174,60 +201,81 @@ export default function RegisterPage() {
             </Button>
           </Link>
         </div>
-        {/* <div className="absolute inset-0 w-full h-full z-0">
+        {
+          /* <div className="absolute inset-0 w-full h-full z-0">
           <ShootingStars />
           <StarsBackground />
         </div>
-        */}
+        */
+        }
 
         <div className="fixed inset-0 z-1 pointer-events-none">
-                <ShootingStars minDelay={3500} maxDelay={5000} starColor="#9E00FF" trailColor="#2EB9DF" />
-                <ShootingStars minDelay={4500} maxDelay={6500} starColor="#FF0099" trailColor="#FFB800" />
-                <ShootingStars minDelay={5500} maxDelay={7500} starColor="#00FF9E" trailColor="#00B8FF" />
-                <ShootingStars minDelay={6500} maxDelay={8500} starColor="#FF4444" trailColor="#FF8888" />
-                
-                {/* White stars */}
-                <Particles
-                  className="absolute inset-0"
-                  quantity={100}
-                  ease={80}
-                  color="#ffffff"
-                  refresh
-                />
-                {/* Purple stars */}
-                <Particles
-                  className="absolute inset-0"
-                  quantity={70}
-                  ease={80}
-                  color="#A97CF8"
-                  refresh
-                />
-                {/* Pink stars */}
-                <Particles
-                  className="absolute inset-0"
-                  quantity={70}
-                  ease={80}
-                  color="#F38CB8"
-                  refresh
-                />
-                {/* Deep Pink stars */}
-                <Particles
-                  className="absolute inset-0"
-                  quantity={50}
-                  ease={80}
-                  color="#EC4899"
-                  refresh
-                />
-                 {/* Gold stars */}
-                 <Particles
-                  className="absolute inset-0"
-                  quantity={30}
-                  ease={80}
-                  color="#FDCC92"
-                  refresh
-                />
-              </div>
-        
+          <ShootingStars
+            minDelay={3500}
+            maxDelay={5000}
+            starColor="#9E00FF"
+            trailColor="#2EB9DF"
+          />
+          <ShootingStars
+            minDelay={4500}
+            maxDelay={6500}
+            starColor="#FF0099"
+            trailColor="#FFB800"
+          />
+          <ShootingStars
+            minDelay={5500}
+            maxDelay={7500}
+            starColor="#00FF9E"
+            trailColor="#00B8FF"
+          />
+          <ShootingStars
+            minDelay={6500}
+            maxDelay={8500}
+            starColor="#FF4444"
+            trailColor="#FF8888"
+          />
+
+          {/* White stars */}
+          <Particles
+            className="absolute inset-0"
+            quantity={100}
+            ease={80}
+            color="#ffffff"
+            refresh
+          />
+          {/* Purple stars */}
+          <Particles
+            className="absolute inset-0"
+            quantity={70}
+            ease={80}
+            color="#A97CF8"
+            refresh
+          />
+          {/* Pink stars */}
+          <Particles
+            className="absolute inset-0"
+            quantity={70}
+            ease={80}
+            color="#F38CB8"
+            refresh
+          />
+          {/* Deep Pink stars */}
+          <Particles
+            className="absolute inset-0"
+            quantity={50}
+            ease={80}
+            color="#EC4899"
+            refresh
+          />
+          {/* Gold stars */}
+          <Particles
+            className="absolute inset-0"
+            quantity={30}
+            ease={80}
+            color="#FDCC92"
+            refresh
+          />
+        </div>
 
         {/* Desktop Astronauts */}
         <div className="fixed top-32 left-10 z-0 hidden lg:block opacity-80 pointer-events-none">
@@ -306,58 +354,80 @@ export default function RegisterPage() {
           </Button>
         </Link>
       </div>
-      {/* <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+      {
+        /* <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
         <ShootingStars />
         <StarsBackground />
-      </div> */}
+      </div> */
+      }
 
       <div className="fixed inset-0 z-1 pointer-events-none">
-              <ShootingStars minDelay={3500} maxDelay={5000} starColor="#9E00FF" trailColor="#2EB9DF" />
-              <ShootingStars minDelay={4500} maxDelay={6500} starColor="#FF0099" trailColor="#FFB800" />
-              <ShootingStars minDelay={5500} maxDelay={7500} starColor="#00FF9E" trailColor="#00B8FF" />
-              <ShootingStars minDelay={6500} maxDelay={8500} starColor="#FF4444" trailColor="#FF8888" />
-              
-              {/* White stars */}
-              <Particles
-                className="absolute inset-0"
-                quantity={100}
-                ease={80}
-                color="#ffffff"
-                refresh
-              />
-              {/* Purple stars */}
-              <Particles
-                className="absolute inset-0"
-                quantity={70}
-                ease={80}
-                color="#A97CF8"
-                refresh
-              />
-              {/* Pink stars */}
-              <Particles
-                className="absolute inset-0"
-                quantity={70}
-                ease={80}
-                color="#F38CB8"
-                refresh
-              />
-              {/* Deep Pink stars */}
-              <Particles
-                className="absolute inset-0"
-                quantity={50}
-                ease={80}
-                color="#EC4899"
-                refresh
-              />
-               {/* Gold stars */}
-               <Particles
-                className="absolute inset-0"
-                quantity={30}
-                ease={80}
-                color="#FDCC92"
-                refresh
-              />
-            </div>
+        <ShootingStars
+          minDelay={3500}
+          maxDelay={5000}
+          starColor="#9E00FF"
+          trailColor="#2EB9DF"
+        />
+        <ShootingStars
+          minDelay={4500}
+          maxDelay={6500}
+          starColor="#FF0099"
+          trailColor="#FFB800"
+        />
+        <ShootingStars
+          minDelay={5500}
+          maxDelay={7500}
+          starColor="#00FF9E"
+          trailColor="#00B8FF"
+        />
+        <ShootingStars
+          minDelay={6500}
+          maxDelay={8500}
+          starColor="#FF4444"
+          trailColor="#FF8888"
+        />
+
+        {/* White stars */}
+        <Particles
+          className="absolute inset-0"
+          quantity={100}
+          ease={80}
+          color="#ffffff"
+          refresh
+        />
+        {/* Purple stars */}
+        <Particles
+          className="absolute inset-0"
+          quantity={70}
+          ease={80}
+          color="#A97CF8"
+          refresh
+        />
+        {/* Pink stars */}
+        <Particles
+          className="absolute inset-0"
+          quantity={70}
+          ease={80}
+          color="#F38CB8"
+          refresh
+        />
+        {/* Deep Pink stars */}
+        <Particles
+          className="absolute inset-0"
+          quantity={50}
+          ease={80}
+          color="#EC4899"
+          refresh
+        />
+        {/* Gold stars */}
+        <Particles
+          className="absolute inset-0"
+          quantity={30}
+          ease={80}
+          color="#FDCC92"
+          refresh
+        />
+      </div>
 
       <div className="fixed top-24 left-10 z-0 hidden lg:block opacity-80 pointer-events-none">
         <FloatingAstronaut className="w-48 h-48" />
@@ -368,7 +438,7 @@ export default function RegisterPage() {
       </div>
 
       <div className="lg:hidden relative z-50 top-20 -mb-4 pointer-events-none flex justify-center">
-          <FloatingAstronaut className="w-32 h-32 drop-shadow-2xl" />
+        <FloatingAstronaut className="w-32 h-32 drop-shadow-2xl" />
       </div>
 
       <Card className="w-full max-w-2xl relative z-10 bg-black/40 backdrop-blur-xl border-neutral-800 text-neutral-100 shadow-[0_0_50px_-12px_rgba(255,255,255,0.1)] mt-8">
@@ -386,7 +456,7 @@ export default function RegisterPage() {
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <input
               type="hidden"
-              value={REGISTRATION_AMOUNT}
+              value={registrationAmount}
               {...register("amount")}
             />
 
@@ -460,16 +530,67 @@ export default function RegisterPage() {
               )}
             </div>
 
+            {/* Educational Status */}
+             <div className="space-y-2">
+              <Label htmlFor="educationalStatus" className="text-neutral-200">
+                Educational Status{" "}
+                <span className="text-red-500 font-bold ml-1">*</span>
+              </Label>
+              <Controller
+                name="educationalStatus"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    onValueChange={(val) => {
+                      field.onChange(val);
+                      // Clear or reset dependent fields
+                      if (val === "Graduated" || val === "Other") {
+                         setValue("collegeName", "N/A"); // Auto remove
+                         setValue("yearOfStudy", val === "Graduated" ? "Graduated" : "Other"); 
+                      } else {
+                         setValue("collegeName", ""); // Reset so user types
+                         // yearOfStudy logic is handled by available options, but we might want to reset it
+                         setValue("yearOfStudy", "");
+                      }
+                    }}
+                    value={field.value}
+                  >
+                    <SelectTrigger
+                      className={cn(
+                        "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100",
+                        errors.educationalStatus &&
+                          "border-red-500 focus:ring-red-500",
+                      )}
+                    >
+                      <SelectValue placeholder="Select Status" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-neutral-900 border-neutral-800 text-neutral-100">
+                      <SelectItem value="School Student">School Student</SelectItem>
+                      <SelectItem value="College Student">College Student</SelectItem>
+                      <SelectItem value="Graduated">Graduated</SelectItem>
+                      <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.educationalStatus && (
+                <span className="text-red-500 font-bold text-xs">
+                  {errors.educationalStatus.message}
+                </span>
+              )}
+            </div>
+
             {/* College Name */}
+            {(watch("educationalStatus") === "School Student" || watch("educationalStatus") === "College Student") && (
             <div className="space-y-2">
               <Label htmlFor="collegeName" className="text-neutral-200">
-                College Name{" "}
+                {watch("educationalStatus") === "School Student" ? "School Name" : "College Name"}{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
               </Label>
               <Input
                 id="collegeName"
                 type="text"
-                placeholder="University/College Name"
+                placeholder={watch("educationalStatus") === "School Student" ? "Enter your school name" : "University/College Name"}
                 className={cn(
                   "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
                   errors.collegeName && "border-red-500 focus:ring-red-500",
@@ -482,11 +603,15 @@ export default function RegisterPage() {
                 </span>
               )}
             </div>
-
+            )}
+             {/* Hidden input for collegeName if not visible, to satisfy backend requirement essentially */}
+             {/* Actually we are setting it in the onChange of educationalStatus but if we need it here */}
+             
             {/* Year of Study */}
+             {(watch("educationalStatus") === "School Student" || watch("educationalStatus") === "College Student") && (
             <div className="space-y-2">
               <Label htmlFor="yearOfStudy" className="text-neutral-200">
-                Year of Study{" "}
+                 {watch("educationalStatus") === "School Student" ? "Class" : "Year of Study"}{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
               </Label>
               <Controller
@@ -495,7 +620,9 @@ export default function RegisterPage() {
                 render={({ field }) => (
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
+                    // defaultValue={field.value}
+                    disabled={watch("educationalStatus") === "Graduated" || watch("educationalStatus") === "Other"}
                   >
                     <SelectTrigger
                       className={cn(
@@ -504,16 +631,38 @@ export default function RegisterPage() {
                           "border-red-500 focus:ring-red-500",
                       )}
                     >
-                      <SelectValue placeholder="Select Year" />
+                      <SelectValue placeholder={watch("educationalStatus") === "School Student" ? "Select Class" : "Select Year"} />
                     </SelectTrigger>
                     <SelectContent className="bg-neutral-900 border-neutral-800 text-neutral-100">
-                      <SelectItem value="1st Year">1st Year</SelectItem>
-                      <SelectItem value="2nd Year">2nd Year</SelectItem>
-                      <SelectItem value="3rd Year">3rd Year</SelectItem>
-                      <SelectItem value="4th Year">4th Year</SelectItem>
-                      <SelectItem value="5th Year">5th Year</SelectItem>
-                      <SelectItem value="Graduated">Graduated</SelectItem>
-                      <SelectItem value="Other">Other</SelectItem>
+                       {watch("educationalStatus") === "School Student" && (
+                          <>
+                            <SelectItem value="6th Class">6th Class</SelectItem>
+                            <SelectItem value="7th Class">7th Class</SelectItem>
+                            <SelectItem value="8th Class">8th Class</SelectItem>
+                            <SelectItem value="9th Class">9th Class</SelectItem>
+                            <SelectItem value="10th Class">10th Class</SelectItem>
+                            <SelectItem value="11th Class">11th Class</SelectItem>
+                            <SelectItem value="12th Class">12th Class</SelectItem>
+                          </>
+                       )}
+                       {watch("educationalStatus") === "College Student" && (
+                          <>
+                            <SelectItem value="1st Year">1st Year</SelectItem>
+                            <SelectItem value="2nd Year">2nd Year</SelectItem>
+                            <SelectItem value="3rd Year">3rd Year</SelectItem>
+                            <SelectItem value="4th Year">4th Year</SelectItem>
+                            <SelectItem value="5th Year">5th Year</SelectItem>
+                          </>
+                       )}
+                       {watch("educationalStatus") === "Graduated" && (
+                           <SelectItem value="Graduated">Graduated</SelectItem>
+                       )}
+                        {watch("educationalStatus") === "Other" && (
+                           <SelectItem value="Other">Other</SelectItem>
+                       )}
+                       {!watch("educationalStatus") && (
+                           <SelectItem value="Other">Select Status First</SelectItem>
+                       )}
                     </SelectContent>
                   </Select>
                 )}
@@ -524,6 +673,7 @@ export default function RegisterPage() {
                 </span>
               )}
             </div>
+             )}
 
             {/* Workshop */}
             <input
@@ -533,50 +683,17 @@ export default function RegisterPage() {
             />
 
             {/* Attended Before */}
-            <div className="space-y-2">
-              <Label className="text-neutral-200">
-                Have you attended SpaceUp before?{" "}
-                <span className="text-red-500 font-bold ml-1">*</span>
-              </Label>
-              <Controller
-                name="attendedBefore"
-                control={control}
-                render={({ field }) => (
-                  <div className="flex gap-6 pt-1">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="Yes"
-                        checked={field.value === "Yes"}
-                        onChange={field.onChange}
-                        className="w-4 h-4 text-neutral-600 bg-neutral-900 border-neutral-700 focus:ring-neutral-600 focus:ring-2"
-                      />
-                      <span className="text-neutral-300">Yes</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="radio"
-                        value="No"
-                        checked={field.value === "No"}
-                        onChange={field.onChange}
-                        className="w-4 h-4 text-neutral-600 bg-neutral-900 border-neutral-700 focus:ring-neutral-600 focus:ring-2"
-                      />
-                      <span className="text-neutral-300">No</span>
-                    </label>
-                  </div>
-                )}
-              />
-              {errors.attendedBefore && (
-                <span className="text-red-500 font-bold text-xs">
-                  {errors.attendedBefore.message}
-                </span>
-              )}
-            </div>
+            <input
+              type="hidden"
+              value="No"
+              {...register("attendedBefore")}
+            />
 
             {/* Food Preference */}
             <div className="space-y-2">
               <Label className="text-neutral-200">
-                Food Preference <span className="text-red-500 font-bold ml-1">*</span>
+                Food Preference{" "}
+                <span className="text-red-500 font-bold ml-1">*</span>
               </Label>
               <Controller
                 name="foodPreference"
@@ -614,29 +731,11 @@ export default function RegisterPage() {
             </div>
 
             {/* Referral Source */}
-            <div className="space-y-2">
-              <Label htmlFor="referralSource" className="text-neutral-200">
-                How did you hear about this event?{" "}
-                <span className="text-xs text-neutral-500 ml-2">
-                  (Optional)
-                </span>
-              </Label>
-              <Input
-                id="referralSource"
-                type="text"
-                placeholder="Social Media, Friend, Poster, etc."
-                className={cn(
-                  "bg-neutral-900/50 border-neutral-800 focus:ring-neutral-700 text-neutral-100 placeholder:text-neutral-600",
-                  errors.referralSource && "border-red-500 focus:ring-red-500",
-                )}
-                {...register("referralSource")}
-              />
-              {errors.referralSource && (
-                <span className="text-red-500 font-bold text-xs">
-                  {errors.referralSource.message}
-                </span>
-              )}
-            </div>
+            <input
+              type="hidden"
+              value="REMOVED"
+              {...register("referralSource")}
+            />
 
             {/* Referral Code */}
             <div className="space-y-2">
@@ -708,13 +807,23 @@ export default function RegisterPage() {
             <div className="bg-neutral-900/50 p-4 rounded-lg border border-neutral-800 mb-6 mt-4">
               <div className="text-center mb-4">
                 <p className="text-neutral-300 mb-2">Registration Fee</p>
-                <div className="text-4xl font-bold text-green-400 flex items-center justify-center gap-2">
-                  {ORIGINAL_REGISTRATION_AMOUNT > REGISTRATION_AMOUNT && (
-                    <span className="text-xl line-through text-red-500 opacity-70">
-                      ₹{ORIGINAL_REGISTRATION_AMOUNT}
-                    </span>
+                <div className="flex flex-col items-center">
+                  <div className="text-4xl font-bold text-green-400 flex items-center justify-center gap-2">
+                    {registrationAmount < ORIGINAL_REGISTRATION_AMOUNT && (
+                      <span className="text-xl line-through text-red-500 opacity-70">
+                        ₹{ORIGINAL_REGISTRATION_AMOUNT}
+                      </span>
+                    )}
+                    <span>₹{registrationAmount}</span>
+                  </div>
+                  {registrationAmount < ORIGINAL_REGISTRATION_AMOUNT && (
+                    <p className="text-xs text-yellow-300 mt-1">
+                      ₹50 discount from using referral code{": "}
+                      <span className="font-mono font-bold text-green-400">
+                        {referralCodeValue}
+                      </span>
+                    </p>
                   )}
-                  <span>₹{REGISTRATION_AMOUNT}</span>
                 </div>
               </div>
 
@@ -778,7 +887,9 @@ export default function RegisterPage() {
               <Label htmlFor="upiTransactionId" className="text-neutral-200">
                 UPI Transaction ID / Ref No{" "}
                 <span className="text-red-500 font-bold ml-1">*</span>
-                <span className="text-xs text-yellow-500/80 ml-2">(Not your UPI ID)</span>
+                <span className="text-xs text-yellow-500/80 ml-2">
+                  (Not your UPI ID)
+                </span>
               </Label>
               <Input
                 id="upiTransactionId"
@@ -834,7 +945,8 @@ export default function RegisterPage() {
               </Button>
               {referralCodeValue && referralStatus !== "valid" && (
                 <p className="text-center text-sm text-yellow-400 mt-3">
-                  ⚠️ Please verify your referral code using the button above before submitting
+                  ⚠️ Please verify your referral code using the button above
+                  before submitting
                 </p>
               )}
             </div>

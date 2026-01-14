@@ -19,6 +19,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide your WhatsApp number'],
   },
+  educationalStatus: {
+    type: String,
+  },
   collegeName: {
     type: String,
     required: [true, 'Please provide your college name'],
@@ -26,7 +29,6 @@ const UserSchema = new mongoose.Schema({
   yearOfStudy: {
     type: String,
     required: [true, 'Please provide your year of study'],
-    enum: ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Graduated', 'Other'],
   },
   workshop: {
     type: String,
