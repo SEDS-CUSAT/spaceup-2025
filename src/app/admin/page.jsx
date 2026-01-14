@@ -102,6 +102,7 @@ export default function AdminPage() {
       'Phone',
       'College',
       'Year',
+      'Food Preference',
       'Workshop',
       'Attended Before',
       'Amount',
@@ -123,6 +124,7 @@ export default function AdminPage() {
         `"${user.whatsappNumber || ''}"`,
         `"${user.collegeName || ''}"`,
         `"${user.yearOfStudy || ''}"`,
+        `"${user.foodPreference || ''}"`,
         `"${user.workshop || ''}"`,
         `"${user.attendedBefore || ''}"`,
         `"${user.amount || ''}"`,
@@ -344,6 +346,7 @@ export default function AdminPage() {
                   <th className="px-6 py-4 text-left whitespace-nowrap">WhatsApp</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">College</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Year</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Food Preference</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Workshop</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Referral Code</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Referral Source</th>
@@ -364,6 +367,7 @@ export default function AdminPage() {
                       {user.collegeName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.yearOfStudy}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.foodPreference || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.workshop}</td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-gray-400">
                       {user.referralCode ? (

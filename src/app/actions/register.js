@@ -121,6 +121,7 @@ export async function registerUser(formData) {
       yearOfStudy: formData.get('yearOfStudy'),
       workshop: 'NOT-DECIDED', // Enforce default value
       attendedBefore: formData.get('attendedBefore'),
+      foodPreference: formData.get('foodPreference'),
       referralSource: formData.get('referralSource'),
       referralCode: formData.get('referralCode'),
       upiTransactionId: formData.get('upiTransactionId'),

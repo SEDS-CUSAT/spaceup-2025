@@ -11,6 +11,9 @@ export const registerSchema = z.object({
   yearOfStudy: z.enum(['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Graduated', 'Other']),
   workshop: z.string().min(1, "Please select a workshop"),
   attendedBefore: z.enum(['Yes', 'No']),
+  foodPreference: z.enum(['Veg', 'Non-Veg'], {
+    errorMap: () => ({ message: "Please select a food preference" }),
+  }),
   referralSource: z.string().optional(),
   referralCode: z.string().optional(),
   upiTransactionId: z.string().min(4, "Transaction ID is required"),

@@ -1,7 +1,7 @@
 
 const Speakers = () => {
     return (
-        <div id="speakers" className="relative w-full min-h-screen z-10 py-20 px-4 md:px-8 flex flex-col items-center overflow-hidden">
+        <div id="speakers" className="relative w-full min-h-screen z-10 py-20 px-2 md:px-8 flex flex-col items-center overflow-hidden">
 
             {/* Airplane Background - Spanning across */}
             <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
@@ -35,8 +35,8 @@ const Speakers = () => {
                     },
                     {
                         name: "Dr. A. Chandrashekhar",
-                        role: "Speaker (Talk Session 2)",
-                        designation: "Outstanding Professor at the Indian Institute of Space Science and Technology (IIST) and Dean of Research and Development.",
+                        role: "Speaker",
+                        designation: "Outstanding Professor at IIST and Dean of Research and Development.",
                         image: "/A Chandrasekhar.jpeg",
                         topic: "Atmospheric & Space Sciences",
                         bio: [
@@ -48,8 +48,8 @@ const Speakers = () => {
                     },
                     {
                         name: "Shrushti Patil",
-                        role: "Workshop 1 Lead",
-                        designation: "Founder of SHe In Space; Space Biologist; Astrobiology Researcher; R&D Astronaut Candidate at Titans Space Industries.",
+                        role: "Workshop",
+                        designation: "Founder of She In Space; R&D Astronaut Candidate at Titans Space Industries.",
                         image: "/Shrushti Patil pic.jpeg",
                         topic: "Opportunities in space biology, with a special focus on how science communication plays a critical role in shaping awareness, careers, and public engagement in emerging space sciences.",
                         bio: [
@@ -83,15 +83,15 @@ const Speakers = () => {
 
                                 {/* Front Content - Bottom Aligned */}
                                 <div className="absolute bottom-0 left-0 w-full p-8 text-center bg-black/30 backdrop-blur-sm border-t border-white/10">
-                                    <h3 className="font-nico text-white text-3xl mb-2 drop-shadow-lg">{speaker.name}</h3>
-                                    <p className="font-tilt text-purple-300 text-sm font-bold uppercase tracking-wider mb-2">{speaker.role}</p>
+                                    <h3 className="font-nico text-white text-2xl mb-2 drop-shadow-lg">{speaker.name}</h3>
+                                    {/* <p className="font-tilt text-purple-300 text-sm font-bold uppercase tracking-wider mb-2">{speaker.role}</p> */}
                                     <p className="font-tilt text-white/80 text-xs md:text-sm line-clamp-2">{speaker.designation}</p>
                                 </div>
                             </div>
 
                             {/* BACK SIDE */}
-                            <div className="absolute inset-0 h-full w-full rounded-[2rem] bg-[#1E112A]/95 text-white p-8 [transform:rotateY(180deg)] [backface-visibility:hidden] border border-purple-500/30 flex flex-col overflow-y-auto">
-                                <h3 className="font-nico text-purple-300 text-2xl mb-4 text-center sticky top-0 bg-[#1E112A]/95 py-2 z-10 border-b border-white/10">
+                            <div className="absolute inset-0 h-full w-full rounded-[2rem] bg-[#1E112A]/95 text-white px-8 pb-8 [transform:rotateY(180deg)] [backface-visibility:hidden] border border-purple-500/30 flex flex-col overflow-y-auto">
+                                <h3 className="font-nico text-purple-300 text-2xl pt-8 pb-4 text-center sticky top-0 bg-[#1E112A] z-10 border-b border-white/10">
                                     {speaker.name}
                                 </h3>
 
