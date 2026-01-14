@@ -34,7 +34,7 @@ import Link from "next/link";
 import { Particles } from "@/components/ui/particles";
 
 const ORIGINAL_REGISTRATION_AMOUNT = 499;
-const REGISTRATION_AMOUNT = 399;
+const REGISTRATION_AMOUNT = 499;
 
 export default function RegisterPage() {
   const containerRef = useRef(null);
