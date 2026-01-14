@@ -7,7 +7,7 @@ export const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.email("Invalid email address"),
   whatsappNumber: z.string().min(10, "Invalid phone number"),
-  educationalStatus: z.enum(['School Student', 'College Student', 'Graduated', 'Other']).optional(),
+  educationalStatus: z.enum(['School Student', 'College Student', 'Graduated', 'Other']),
   collegeName: z.string().min(2, "School/College name is required").optional().or(z.literal("")),
   yearOfStudy: z.string().min(1, "Year of study is required"), 
   workshop: z.string().min(1, "Please select a workshop"),

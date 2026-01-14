@@ -21,7 +21,6 @@ const UserSchema = new mongoose.Schema({
   },
   educationalStatus: {
     type: String,
-    enum: ['School Student', 'College Student', 'Graduated', 'Other'],
   },
   collegeName: {
     type: String,
@@ -30,7 +29,6 @@ const UserSchema = new mongoose.Schema({
   yearOfStudy: {
     type: String,
     required: [true, 'Please provide your year of study'],
-    enum: ['1st Year', '2nd Year', '3rd Year', '4th Year', '5th Year', 'Graduated', 'Other', '6th Class', '7th Class', '8th Class', '9th Class', '10th Class', '11th Class', '12th Class'],
   },
   workshop: {
     type: String,
