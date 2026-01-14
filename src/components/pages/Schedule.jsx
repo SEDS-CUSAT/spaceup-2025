@@ -16,7 +16,7 @@ const Schedule = () => {
                 <TimelineItem time="9:15 AM - 9:40 AM" title="Inauguration" variant="purple" />
 
                 {/* 9:40 - 10:00 Refreshments */}
-                <TimelineBreak time="9:40 AM - 10:00 AM" title="Refreshments" icon="☕" />
+                <TimelineBreak time="9:40 AM - 10:00 AM" title="Refreshments" />
 
                 {/* 10:00 - 10:55 Speaker 1 */}
                 <TimelineItem 
@@ -35,7 +35,7 @@ const Schedule = () => {
                 />
 
                 {/* 12:00 - 1:15 Lunch */}
-                <TimelineBreak time="12:00 PM - 01:15 PM" title="Lunch Break" icon="🍕" />
+                <TimelineBreak time="12:00 PM - 01:15 PM" title="Lunch Break" />
 
                 {/* 1:30 - 2:00 Concurrent: Interactive + Fun Zone */}
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in-up">
@@ -88,9 +88,9 @@ const TimelineItem = ({ time, title, subtitle, variant }) => {
 };
 
 const TimelineBreak = ({ time, title, icon }) => (
-    <div className="w-full max-w-2xl py-3 px-6 rounded-xl bg-white/5 border border-dashed border-white/20 flex items-center justify-center gap-4 animate-fade-in-up opacity-80">
-        <span className="text-xl">{icon}</span>
-        <span className="font-tilt text-white/60 text-sm">{time}</span>
+    <div className="w-full max-w-2xl py-3 px-4 lg:px-6 rounded-xl bg-white/5 border border-dashed border-white/20 flex flex-wrap items-center justify-center align-center gap-x-4 gap-y-2 animate-fade-in-up opacity-80 text-center">
+        {/* <span className="text-xl">{icon}</span> */}
+        <span className="font-tilt text-white/60 text-xs">{time}</span>
         <span className="font-nico text-purple-200 text-lg mx-2">-</span>
         <h4 className="font-nico text-white/80 text-lg uppercase tracking-widest">{title}</h4>
         <span className="text-xl">{icon}</span>

@@ -40,7 +40,7 @@ const Speakers = () => {
                     },
                     {
                         name: "Shrushti Patil",
-                        role: "Workshop Lead",
+                        role: "Exclusive Talk",
                         designation: "Founder, She In Space",
                         image: "/Shrushti Patil pic.jpeg",
                         topic: "Space Biology & Science Comm.",
