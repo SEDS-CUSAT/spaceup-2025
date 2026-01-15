@@ -112,6 +112,14 @@ export async function verifyReferralCode(referralCode) {
 export async function registerUser(formData) {
   try {
     await dbConnect();
+    
+    // Check global registration status
+    const constants = await Constants.findById('app_constants');
+    const isRegistrationOpen = constants?.registrationOpen ?? true;
+
+    if (!isRegistrationOpen) {
+      return { success: false, message: "Use Spot Registration." };
+    }
 
     const rawData = {
       name: formData.get('name'),
@@ -197,6 +205,12 @@ export async function registerUser(formData) {
       const constants = await Constants.findById('app_constants') || 
         await Constants.create({ _id: 'app_constants' });
       constants.registrationCount += 1;
+      
+      // Auto-close if max limit reached
+      if (constants.registrationCount >= constants.maxRegistrations) {
+        constants.registrationOpen = false;
+      }
+      
       await constants.save();
     } catch (error) {
       console.error('Error updating registration count:', error);

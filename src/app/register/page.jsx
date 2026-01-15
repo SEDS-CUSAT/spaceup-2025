@@ -50,6 +50,7 @@ export default function RegisterPage() {
   const [paymentQR, setPaymentQR] = useState(paymentQRs[0]);
   const [isLoadingQR, setIsLoadingQR] = useState(true);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
     const fetchConstants = async () => {
@@ -64,14 +65,22 @@ export default function RegisterPage() {
             setPaymentQR(selectedQR);
           }
           
+          let isOpen = true;
           if (typeof data.constants.registrationOpen === 'boolean') {
-            setIsRegistrationOpen(data.constants.registrationOpen);
+            isOpen = data.constants.registrationOpen;
           }
+           if (typeof data.constants.registrationCount === 'number' && typeof data.constants.maxRegistrations === 'number') {
+            if (data.constants.registrationCount >= data.constants.maxRegistrations) {
+                isOpen = false;
+            }
+          }
+          setIsRegistrationOpen(isOpen);
         }
       } catch (err) {
         console.error("Failed to fetch constants", err);
       } finally {
         setIsLoadingQR(false);
+        setIsDataLoaded(true);
       }
     };
     fetchConstants();
@@ -485,7 +494,15 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {!isRegistrationOpen && !isLoadingQR ? (
+          {!isDataLoaded ? (
+            <div className="space-y-6 animate-pulse">
+                <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                 <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                  <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                   <div className="h-20 bg-neutral-800 rounded w-full"></div>
+            </div>
+          ) : !isRegistrationOpen ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-8 text-center">
               <div className="flex justify-center">
                 <div className="bg-neutral-900/50 p-4 rounded-full border border-neutral-800">
