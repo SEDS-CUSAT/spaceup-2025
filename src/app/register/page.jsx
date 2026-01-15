@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/lib/schemas";
+import { paymentQRs } from "@/lib/constants";
 import { registerUser, verifyReferralCode } from "@/app/actions/register";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -45,6 +46,27 @@ export default function RegisterPage() {
   const [registrationAmount, setRegistrationAmount] = useState(
     ORIGINAL_REGISTRATION_AMOUNT,
   );
+  const [paymentQR, setPaymentQR] = useState(paymentQRs[0]);
+  const [isLoadingQR, setIsLoadingQR] = useState(true);
+
+  useEffect(() => {
+    const fetchConstants = async () => {
+      try {
+        const res = await fetch('/api/constants');
+        const data = await res.json();
+        if (data.success && data.constants && typeof data.constants.activePaymentId === 'number') {
+          const activeId = data.constants.activePaymentId;
+          const selectedQR = paymentQRs.find(qr => qr.id === activeId) || paymentQRs[0];
+          setPaymentQR(selectedQR);
+        }
+      } catch (err) {
+        console.error("Failed to fetch constants", err);
+      } finally {
+        setIsLoadingQR(false);
+      }
+    };
+    fetchConstants();
+  }, []);
 
   useEffect(() => {
     const registered = localStorage.getItem("spaceup_registered");
@@ -829,49 +851,63 @@ export default function RegisterPage() {
 
               <div className="flex flex-col items-center space-y-4">
                 {/* QR Code Image */}
-                <div className="w-full max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
-                  <img
-                    src="/mesac550sbi.jpeg"
-                    alt="Payment QR Code"
-                    className="w-full h-auto object-contain"
-                  />
-                </div>
+                {isLoadingQR ? (
+                  <div className="w-full max-w-[350px] aspect-square bg-neutral-800 rounded-lg animate-pulse flex items-center justify-center">
+                    <span className="text-neutral-500 text-sm">Loading QR...</span>
+                  </div>
+                ) : (
+                  <div className="w-full max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
+                    <img
+                      src={
+                        registrationAmount === ORIGINAL_REGISTRATION_AMOUNT
+                          ? paymentQR.qr_499_url
+                          : paymentQR.qr_449_url
+                      }
+                      alt="Payment QR Code"
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                )}
 
                 <div className="w-full text-center space-y-2">
                   <p className="text-sm text-neutral-400">
                     Scan QR Code or pay to UPI ID
                   </p>
-                  <div
-                    className="flex items-center justify-center gap-2 p-3 bg-black/50 rounded border border-neutral-800 cursor-pointer hover:border-neutral-600 transition-colors group"
-                    onClick={() => {
-                      navigator.clipboard.writeText("mesac550@sbi");
-                      // Simple feedback
-                      const el = document.getElementById("copy-feedback");
-                      if (el) {
-                        el.style.opacity = "1";
-                        setTimeout(() => el.style.opacity = "0", 2000);
-                      }
-                    }}
-                  >
-                    <code className="text-lg text-indigo-300 font-mono">
-                      mesac550@sbi
-                    </code>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-neutral-500 group-hover:text-white transition-colors"
+                  {isLoadingQR ? (
+                    <div className="h-12 w-full bg-neutral-800 rounded animate-pulse" />
+                  ) : (
+                    <div
+                      className="flex items-center justify-center gap-2 p-3 bg-black/50 rounded border border-neutral-800 cursor-pointer hover:border-neutral-600 transition-colors group"
+                      onClick={() => {
+                        navigator.clipboard.writeText(paymentQR.upi);
+                        // Simple feedback
+                        const el = document.getElementById("copy-feedback");
+                        if (el) {
+                          el.style.opacity = "1";
+                          setTimeout(() => (el.style.opacity = "0"), 2000);
+                        }
+                      }}
                     >
-                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                    </svg>
-                  </div>
+                      <code className="text-lg text-indigo-300 font-mono">
+                        {paymentQR.upi}
+                      </code>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-neutral-500 group-hover:text-white transition-colors"
+                      >
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                      </svg>
+                    </div>
+                  )}
                   <p
                     id="copy-feedback"
                     className="text-xs text-green-400 opacity-0 transition-opacity duration-300"

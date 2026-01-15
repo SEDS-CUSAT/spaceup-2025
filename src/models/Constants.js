@@ -24,7 +24,11 @@ const ConstantsSchema = new mongoose.Schema({
   },
   maxRegistrations: {
     type: Number,
-    default: 500,
+    default: 600,
+  },
+  activePaymentId: {
+    type: Number,
+    default: 0,
   },
 }, {
   timestamps: true,
