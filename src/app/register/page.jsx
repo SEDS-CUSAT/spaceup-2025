@@ -30,7 +30,8 @@ import { StarsBackground } from "@/components/ui/stars-background";
 import { FileUpload } from "@/components/ui/file-upload";
 import { FloatingAstronaut } from "@/components/ui/floating-astronaut";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarX } from "lucide-react";
+
 import Link from "next/link";
 import { Particles } from "@/components/ui/particles";
 
@@ -48,16 +49,24 @@ export default function RegisterPage() {
   );
   const [paymentQR, setPaymentQR] = useState(paymentQRs[0]);
   const [isLoadingQR, setIsLoadingQR] = useState(true);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
 
   useEffect(() => {
     const fetchConstants = async () => {
       try {
         const res = await fetch('/api/constants');
         const data = await res.json();
-        if (data.success && data.constants && typeof data.constants.activePaymentId === 'number') {
-          const activeId = data.constants.activePaymentId;
-          const selectedQR = paymentQRs.find(qr => qr.id === activeId) || paymentQRs[0];
-          setPaymentQR(selectedQR);
+        
+        if (data.success && data.constants) {
+          if (typeof data.constants.activePaymentId === 'number') {
+            const activeId = data.constants.activePaymentId;
+            const selectedQR = paymentQRs.find(qr => qr.id === activeId) || paymentQRs[0];
+            setPaymentQR(selectedQR);
+          }
+          
+          if (typeof data.constants.registrationOpen === 'boolean') {
+            setIsRegistrationOpen(data.constants.registrationOpen);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch constants", err);
@@ -181,6 +190,7 @@ export default function RegisterPage() {
     formData.append("referralCode", data.referralCode || "");
     formData.append("upiTransactionId", data.upiTransactionId);
     formData.append("amount", data.amount);
+    formData.append("paymentId", paymentQR.id);
 
     // data.paymentScreenshot is an array of files from FileUpload
     if (data.paymentScreenshot && data.paymentScreenshot[0]) {
@@ -475,7 +485,52 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {!isRegistrationOpen && !isLoadingQR ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-8 text-center">
+              <div className="flex justify-center">
+                <div className="bg-neutral-900/50 p-4 rounded-full border border-neutral-800">
+                  <CalendarX className="w-8 h-8 text-red-400/80" />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-3xl font-bold font-nico text-red-400 tracking-tight">
+                  Online Applications Closed
+                </h3>
+                <div className="text-neutral-400 max-w-md mx-auto text-base leading-relaxed space-y-2">
+                  <p>
+                    Thank you for showing interest in SpaceUp Volume 7! Online registrations for the event are now closed.
+                  </p>
+                  <p className="text-yellow-400 font-medium">
+                    You can still register on the spot at the venue.
+                  </p>
+                  <p className="text-sm text-neutral-500">
+                     Please arrive early to secure your pass. We look forward to seeing you there!
+                  </p>
+                </div>
+                
+                <div className="pt-4 border-t border-neutral-800 w-full max-w-xs mx-auto">
+                    <p className="text-neutral-500 text-sm mb-1">
+                    For enquiries contact
+                    </p>
+                     <a
+                    href="mailto:spaceup@sedscusat.com"
+                    className="text-indigo-400 hover:text-indigo-300 transition-colors text-base"
+                  >
+                    spaceup@sedscusat.com
+                  </a>
+                </div>
+              </div>
+              
+              <div className="pt-2">
+                <Link href="/">
+                  <Button className="bg-white text-black hover:bg-neutral-200 font-semibold px-8 py-6 rounded-full text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                    Return to Home
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <input
               type="hidden"
               value={registrationAmount}
@@ -997,6 +1052,7 @@ export default function RegisterPage() {
               </a>
             </p>
           </form>
+          )}
         </CardContent>
       </Card>
     </div>

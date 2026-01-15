@@ -48,6 +48,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  paymentId: {
+    type: Number,
+    required: false,
+  },
   referralCode: {
     type: String,
     required: false,

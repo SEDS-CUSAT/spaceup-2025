@@ -19,6 +19,7 @@ export const registerSchema = z.object({
   referralCode: z.string().optional(),
   upiTransactionId: z.string().min(4, "Transaction ID is required"),
   amount: z.coerce.number().min(1, "Amount is required"),
+  paymentId: z.coerce.number().optional(),
   paymentScreenshot: z
     .any()
     .refine((files) => files?.length > 0, "Payment screenshot is required.")

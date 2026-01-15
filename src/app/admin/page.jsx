@@ -459,6 +459,7 @@ export default function AdminPage() {
                   <th className="px-6 py-4 text-left whitespace-nowrap">Referral Code</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Referral Source</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Amount</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Payment To</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Txn ID</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Proof</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Status</th>
@@ -487,6 +488,20 @@ export default function AdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.referralSource || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">₹{user.amount}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300 text-xs">
+                      {(() => {
+                        if (user.paymentId === undefined || user.paymentId === null) return '-';
+                        const qr = paymentQRs.find((q) => q.id === user.paymentId);
+                        return qr ? (
+                          <div className="flex flex-col">
+                            <span className="font-medium text-white">{qr.name}</span>
+                            <span className="text-gray-500">{qr.upi}</span>
+                          </div>
+                        ) : (
+                          user.paymentId
+                        );
+                      })()}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-indigo-300">
                       {user.upiTransactionId}
                     </td>

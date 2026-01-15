@@ -24,4 +24,6 @@ const paymentQRs = [
   },
 ];
 
-export { paymentQRs };
+const MAX_REGISTRATIONS = 500;
+
+export { paymentQRs, MAX_REGISTRATIONS };
