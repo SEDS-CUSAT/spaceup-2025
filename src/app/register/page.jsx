@@ -230,7 +230,7 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative w-full overflow-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar">
         <div
-          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-50 pointer-events-none"
           style={{ backgroundImage: `url('/BG.jpg')` }}
         />
         <ScrollProgress className="top-0" />
@@ -382,7 +382,7 @@ export default function RegisterPage() {
       className="h-screen bg-neutral-950 flex flex-col items-center relative w-full overflow-y-auto overflow-x-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar"
     >
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-50 pointer-events-none"
         style={{ backgroundImage: `url('/BG.jpg')` }}
       />
 
