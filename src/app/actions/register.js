@@ -5,6 +5,7 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import Constants from '@/models/Constants';
 import { registerSchema } from '@/lib/schemas';
+import { sendDiscordWebhook } from '@/lib/discord';
 
 const cloudinaryConfig = {
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -24,7 +25,13 @@ async function triggerReferralIncrease(referralCode, retries = 3) {
   const apiKey = process.env.AMBASSADOR_API_KEY;
 
   if (!serviceUrl || !apiKey) {
-    console.warn("Ambassador service URL or API Key is missing.");
+    const msg = "Ambassador service URL or API Key is missing.";
+    console.warn(msg);
+    await sendDiscordWebhook({
+        title: 'Referral Config Missing ⚠️',
+        description: msg,
+        color: 0xFFFF00,
+    });
     return;
   }
 
@@ -59,12 +66,28 @@ async function triggerReferralIncrease(referralCode, retries = 3) {
         errorData = { message: errorText.slice(0, 200) }; // Truncate HTML if it's a page
       }
       console.error('Failed to increment referral:', response.status, errorData);
+      await sendDiscordWebhook({
+          title: 'Referral Increment Failed ❌',
+          description: `Failed to increment referral code: ${referralCode}`,
+          color: 0xFF0000,
+          fields: [
+              { name: 'Status', value: String(response.status), inline: true },
+              { name: 'Error', value: JSON.stringify(errorData).slice(0, 1000) }
+          ]
+      });
       return;
 
     } catch (error) {
       console.error('Failed to trigger referral increase:', error);
       if (i < retries - 1) {
          await new Promise(resolve => setTimeout(resolve, 1000));
+      } else {
+        await sendDiscordWebhook({
+            title: 'Referral Increase Error 🚨',
+            description: `Exception while incrementing referral: ${referralCode}`,
+            color: 0xFF0000,
+            fields: [{ name: 'Message', value: error.message }]
+        });
       }
     }
   }
@@ -118,6 +141,11 @@ export async function registerUser(formData) {
     const isRegistrationOpen = constants?.registrationOpen ?? true;
 
     if (!isRegistrationOpen) {
+      await sendDiscordWebhook({
+        title: 'Registration Attempt Blocked',
+        description: `Someone attempted to register with email: ${formData.get('email')}, but registration is closed.`,
+        color: 0xFFA500,
+      });
       return { success: false, message: "Use Spot Registration." };
     }
 
@@ -144,6 +172,17 @@ export async function registerUser(formData) {
     const validatedFields = registerSchema.omit({ paymentScreenshot: true }).safeParse(rawData);
 
     if (!validatedFields.success) {
+      await sendDiscordWebhook({
+        title: 'Registration Validation Failed',
+        description: 'User submitted invalid data.',
+        color: 0xFF0000,
+        fields: Object.entries(validatedFields.error.flatten().fieldErrors).map(([key, val]) => ({
+          name: key,
+          value: Array.isArray(val) ? val.join(', ') : String(val),
+          inline: true,
+        })),
+        footer: `Email: ${formData.get('email')}`
+      });
       return {
         success: false,
         errors: validatedFields.error.flatten().fieldErrors,
@@ -152,10 +191,20 @@ export async function registerUser(formData) {
 
     const file = rawData.paymentScreenshot;
     if (!file || file.size === 0) {
+        await sendDiscordWebhook({
+          title: 'Registration Failed - No File',
+          description: `User ${validatedFields.data.name} (${validatedFields.data.email}) did not provide a payment screenshot.`,
+          color: 0xFF0000,
+        });
         return { success: false, message: "Payment screenshot is required" };
     }
     
     if (file.size > 2 * 1024 * 1024) {
+        await sendDiscordWebhook({
+          title: 'Registration Failed - File Too Large',
+          description: `User ${validatedFields.data.name} (${validatedFields.data.email}) tried to upload a file larger than 2MB.`,
+          color: 0xFF0000,
+        });
         return { success: false, message: "File size must be less than 2MB" };
     }
 
@@ -168,6 +217,25 @@ export async function registerUser(formData) {
     });
 
     if (existingUser) {
+        let reason = "Unknown";
+        if (existingUser.email === validatedFields.data.email) {
+            reason = "Email already registered";
+        }
+        if (existingUser.upiTransactionId === validatedFields.data.upiTransactionId) {
+            reason = "Transaction ID already used";
+        }
+        
+        await sendDiscordWebhook({
+          title: 'Registration Failed - Duplicate',
+          description: reason,
+          color: 0xFF0000,
+          fields: [
+            { name: 'Name', value: validatedFields.data.name, inline: true },
+            { name: 'Email', value: validatedFields.data.email, inline: true },
+            { name: 'Transaction ID', value: validatedFields.data.upiTransactionId, inline: true }
+          ]
+        });
+
         if (existingUser.email === validatedFields.data.email) {
             return { success: false, message: "Email already registered" };
         }
@@ -217,10 +285,31 @@ export async function registerUser(formData) {
       // Don't fail the registration if this fails
     }
 
+    await sendDiscordWebhook({
+      title: 'New Registration Successful! 🚀',
+      description: `**${newUser.name}** has registered.`,
+      color: 0x00FF00,
+      fields: [
+        { name: 'Email', value: newUser.email, inline: true },
+        { name: 'College', value: newUser.collegeName, inline: true },
+        { name: 'Year', value: newUser.yearOfStudy, inline: true },
+        { name: 'Amount', value: `₹${newUser.amount}`, inline: true },
+        { name: 'Transaction ID', value: newUser.upiTransactionId, inline: true },
+        { name: 'Referral', value: newUser.referralCode || 'None', inline: true }
+      ],
+      footer: `User ID: ${newUser._id}`
+    });
+
     return { success: true, message: "Registration successful!" };
 
   } catch (error) {
     console.error("Registration error:", error);
+    await sendDiscordWebhook({
+      title: 'Registration System Error 🚨',
+      description: `An unexpected error occurred during user registration: ${error.message}`,
+      color: 0xFF0000,
+      footer: `Timestamp: ${new Date().toISOString()}`
+    });
     return { success: false, message: "Something went wrong. Please try again." };
   }
 }
