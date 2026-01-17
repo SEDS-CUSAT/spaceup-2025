@@ -18,19 +18,19 @@ const Schedule = () => {
                 {/* 9:40 - 10:00 Refreshments */}
                 <TimelineBreak time="9:40 AM - 10:00 AM" title="Refreshments" />
 
-                {/* 10:00 - 10:55 Speaker 1 */}
+                {/* 10:00 - 11:00 Speaker 1 */}
                 <TimelineItem 
-                    time="10:00 AM - 10:55 AM" 
-                    title="Keynote: Microwave Remote Sensing" 
+                    time="10:00 AM - 11:00 AM" 
+                    title="Microwave Remote Sensing" 
                     subtitle="Dr. Shiv Mohan (From RISAT to Chandrayaan)"
                     variant="glow"
                 />
 
-                {/* 11:00 - 11:55 Speaker 2 */}
+                {/* 11:00 - 12:00 Speaker 2 */}
                 <TimelineItem 
-                    time="11:00 AM - 11:55 AM" 
-                    title="Atmospheric & Space Sciences" 
-                    subtitle="Dr. A. Chandrasekhar (IIST)"
+                    time="11:00 AM - 12:00 PM" 
+                    title="Satellite applications in atmospheric & oceanic sciences" 
+                    subtitle="Prof A Chandrasekhar (IIST Professor)"
                     variant="glow"
                 />
 
@@ -47,10 +47,10 @@ const Schedule = () => {
                 <div className="w-full bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-md animate-fade-in-up">
                     <h3 className="font-nico text-purple-300 text-xl md:text-2xl mb-6 text-center">Workshops & Startup Sessions (2:30 PM - 4:00 PM)</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <Card time="Exclusive Talk" title="Shrushti Patil" subtitle="Space Biology & Comm." variant="purple" />
-                        <Card time="Speaker Session" title="Sarath Lal" subtitle="Space Tech Insights" variant="purple" />
-                        <Card time="Hands-on" title="Breakthrough" subtitle="Interactive Workshop" variant="purple" />
-                        <Card time="Exclusive Talk" title="Shwetha M" subtitle="Emerging Space Careers" variant="purple" />
+                        <Card time="Exclusive Talk" title="G Levin (CEO KSPACE)" subtitle="" variant="purple" />
+                        <Card time="Exclusive Talk" title="Edwin K Jayesh" subtitle="Advancing Space Tech in different domains" variant="purple" />
+                        <Card time="Speaker Session" title="Sarath Lal" subtitle="Understanding Fundamental Physics" variant="purple" />
+                        <Card time="Hands-on" title="Telescope Workshop" subtitle="Breakthrough Science Society (Mr. Harikumar)" variant="purple" />
                     </div>
                 </div>
 
@@ -102,7 +102,7 @@ const Card = ({ time, title, subtitle, variant }) => (
         ${variant === 'purple' ? 'bg-[#2E1C3B]/60 border-purple-500/20' : 'bg-white/5 border-white/10'}`}>
         <span className="font-tilt text-purple-400 text-xs font-bold uppercase mb-2">{time}</span>
         <h4 className="font-nico text-white text-lg mb-1">{title}</h4>
-        <p className="font-tilt text-white/70 text-sm">{subtitle}</p>
+        {subtitle && <p className="font-tilt text-white/70 text-sm">{subtitle}</p>}
     </div>
 );
 
