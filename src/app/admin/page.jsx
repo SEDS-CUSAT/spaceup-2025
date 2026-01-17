@@ -2,7 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { X, Download } from 'lucide-react';
+import { X, Download, Save } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { paymentQRs } from '@/lib/constants';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -18,10 +21,28 @@ export default function AdminPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [verifyingUsers, setVerifyingUsers] = useState(new Set());
   const [initialLoading, setInitialLoading] = useState(true);
+  
+  // Constants management state
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [tempSettings, setTempSettings] = useState({
+    activePaymentId: 0,
+    registrationOpen: true,
+    maxRegistrations: 500
+  });
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (constants) {
+      setTempSettings({
+        activePaymentId: constants.activePaymentId ?? 0,
+        registrationOpen: constants.registrationOpen ?? true,
+        maxRegistrations: constants.maxRegistrations ?? 500
+      });
+    }
+  }, [constants]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -91,6 +112,31 @@ export default function AdminPage() {
       setError('Failed to fetch data');
     } finally {
       setInitialLoading(false);
+    }
+  };
+
+  const handleUpdateSettings = async (e) => {
+    e.preventDefault();
+    setSettingsLoading(true);
+
+    try {
+      const res = await fetch('/api/admin/constants', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tempSettings),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setConstants(data.constants);
+        toast.success('Settings updated successfully');
+      } else {
+        toast.error('Failed to update settings');
+      }
+    } catch (err) {
+      toast.error('Network error while updating settings');
+    } finally {
+      setSettingsLoading(false);
     }
   };
 
@@ -283,34 +329,93 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Statistics */}
+        {/* Statistics and Settings */}
         {constants && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-gray-400 text-sm">Total Registrations</h3>
-              <p className="text-3xl font-bold mt-2">{users.length}</p>
+          <div className="space-y-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-gray-800 p-6 rounded-lg">
+                <h3 className="text-gray-400 text-sm">Total Registrations</h3>
+                <p className="text-3xl font-bold mt-2">{users.length}</p>
+              </div>
+              <div className="bg-gray-800 p-6 rounded-lg">
+                <h3 className="text-gray-400 text-sm">Verified</h3>
+                <p className="text-3xl font-bold mt-2 text-green-500">
+                  {users.filter((u) => u.isVerified).length}
+                </p>
+              </div>
+              <div className="bg-gray-800 p-6 rounded-lg">
+                <h3 className="text-gray-400 text-sm">Unverified</h3>
+                <p className="text-3xl font-bold mt-2 text-yellow-500">
+                  {users.filter((u) => !u.isVerified).length}
+                </p>
+              </div>
             </div>
+
             <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-gray-400 text-sm">Verified</h3>
-              <p className="text-3xl font-bold mt-2 text-green-500">
-                {users.filter((u) => u.isVerified).length}
-              </p>
-            </div>
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-gray-400 text-sm">Unverified</h3>
-              <p className="text-3xl font-bold mt-2 text-yellow-500">
-                {users.filter((u) => !u.isVerified).length}
-              </p>
-            </div>
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h3 className="text-gray-400 text-sm">Registration Status</h3>
-              <p className="text-lg font-bold mt-2">
-                {constants.registrationOpen ? (
-                  <span className="text-green-500">Open</span>
-                ) : (
-                  <span className="text-red-500">Closed</span>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+                <h3 className="text-lg font-semibold text-white">Registration Settings</h3>
+                
+                {(constants.activePaymentId !== tempSettings.activePaymentId || 
+                  constants.registrationOpen !== tempSettings.registrationOpen) && (
+                  <button
+                    onClick={handleUpdateSettings}
+                    disabled={settingsLoading}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm disabled:opacity-50 transition-all font-medium"
+                  >
+                    <Save size={16} />
+                    {settingsLoading ? "Saving..." : "Save Changes"}
+                  </button>
                 )}
-              </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">Active Payment QR</label>
+                  <select
+                    value={tempSettings.activePaymentId}
+                    onChange={(e) =>
+                      setTempSettings({
+                        ...tempSettings,
+                        activePaymentId: parseInt(e.target.value),
+                      })
+                    }
+                    className="bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                  >
+                    {paymentQRs.map((qr) => (
+                      <option key={qr.id} value={qr.id}>
+                        {qr.name} ({qr.upi})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">Registration Status</label>
+                  <select
+                    value={tempSettings.registrationOpen}
+                    onChange={(e) =>
+                      setTempSettings({
+                        ...tempSettings,
+                        registrationOpen: e.target.value === "true",
+                      })
+                    }
+                    className="bg-gray-900 text-white rounded-lg px-4 py-2.5 text-sm border border-gray-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all"
+                  >
+                    <option value="true">Open</option>
+                    <option value="false">Closed</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs font-medium text-gray-400 uppercase tracking-wider">Max Registrations</label>
+                  <input
+                    type="number"
+                    value={tempSettings.maxRegistrations}
+                    disabled
+                    className="bg-gray-800 text-gray-500 rounded-lg px-4 py-2.5 text-sm border border-gray-700 cursor-not-allowed outline-none"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -354,6 +459,7 @@ export default function AdminPage() {
                   <th className="px-6 py-4 text-left whitespace-nowrap">Referral Code</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Referral Source</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Amount</th>
+                  <th className="px-6 py-4 text-left whitespace-nowrap">Payment To</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Txn ID</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Proof</th>
                   <th className="px-6 py-4 text-left whitespace-nowrap">Status</th>
@@ -382,6 +488,20 @@ export default function AdminPage() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">{user.referralSource || '-'}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-300">₹{user.amount}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-300 text-xs">
+                      {(() => {
+                        if (user.paymentId === undefined || user.paymentId === null) return '-';
+                        const qr = paymentQRs.find((q) => q.id === user.paymentId);
+                        return qr ? (
+                          <div className="flex flex-col">
+                            <span className="font-medium text-white">{qr.name}</span>
+                            <span className="text-gray-500">{qr.upi}</span>
+                          </div>
+                        ) : (
+                          user.paymentId
+                        );
+                      })()}
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap font-mono text-xs text-indigo-300">
                       {user.upiTransactionId}
                     </td>

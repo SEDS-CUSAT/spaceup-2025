@@ -19,8 +19,8 @@ const Navbar = () => {
             <div className="relative bg-[#2E1C3B]/60 backdrop-blur-xl rounded-full px-6 md:px-8 py-3 md:py-4 flex justify-between items-center border border-white/10 shadow-[0_0_20px_rgba(107,33,168,0.3)]">
                 {/* Logo */}
                 <div className="shrink-0 mr-auto flex items-center gap-3">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden border-2 border-purple-500/50 shadow-lg shadow-purple-500/20">
-                        <img src="/SpaceUp.jpg" alt="SpaceUp Logo" className="w-full h-full object-cover" />
+                    <div className="w-auto h-10 md:h-12 -translate-y-1">
+                        <img src="/spaceup-new-logo.png" alt="SpaceUp Logo" className="w-auto h-full object-contain" />
                     </div>
                 </div>
 

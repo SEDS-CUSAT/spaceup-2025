@@ -26,6 +26,10 @@ const ConstantsSchema = new mongoose.Schema({
     type: Number,
     default: 500,
   },
+  activePaymentId: {
+    type: Number,
+    default: 0,
+  },
 }, {
   timestamps: true,
 });

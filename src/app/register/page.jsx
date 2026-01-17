@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { registerSchema } from "@/lib/schemas";
+import { paymentQRs } from "@/lib/constants";
 import { registerUser, verifyReferralCode } from "@/app/actions/register";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -29,7 +30,8 @@ import { StarsBackground } from "@/components/ui/stars-background";
 import { FileUpload } from "@/components/ui/file-upload";
 import { FloatingAstronaut } from "@/components/ui/floating-astronaut";
 import { ScrollProgress } from "@/components/ui/scroll-progress";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarX } from "lucide-react";
+
 import Link from "next/link";
 import { Particles } from "@/components/ui/particles";
 
@@ -45,6 +47,44 @@ export default function RegisterPage() {
   const [registrationAmount, setRegistrationAmount] = useState(
     ORIGINAL_REGISTRATION_AMOUNT,
   );
+  const [paymentQR, setPaymentQR] = useState(paymentQRs[0]);
+  const [isLoadingQR, setIsLoadingQR] = useState(true);
+  const [isRegistrationOpen, setIsRegistrationOpen] = useState(true);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    const fetchConstants = async () => {
+      try {
+        const res = await fetch('/api/constants');
+        const data = await res.json();
+        
+        if (data.success && data.constants) {
+          if (typeof data.constants.activePaymentId === 'number') {
+            const activeId = data.constants.activePaymentId;
+            const selectedQR = paymentQRs.find(qr => qr.id === activeId) || paymentQRs[0];
+            setPaymentQR(selectedQR);
+          }
+          
+          let isOpen = true;
+          if (typeof data.constants.registrationOpen === 'boolean') {
+            isOpen = data.constants.registrationOpen;
+          }
+           if (typeof data.constants.registrationCount === 'number' && typeof data.constants.maxRegistrations === 'number') {
+            if (data.constants.registrationCount >= data.constants.maxRegistrations) {
+                isOpen = false;
+            }
+          }
+          setIsRegistrationOpen(isOpen);
+        }
+      } catch (err) {
+        console.error("Failed to fetch constants", err);
+      } finally {
+        setIsLoadingQR(false);
+        setIsDataLoaded(true);
+      }
+    };
+    fetchConstants();
+  }, []);
 
   useEffect(() => {
     const registered = localStorage.getItem("spaceup_registered");
@@ -159,6 +199,7 @@ export default function RegisterPage() {
     formData.append("referralCode", data.referralCode || "");
     formData.append("upiTransactionId", data.upiTransactionId);
     formData.append("amount", data.amount);
+    formData.append("paymentId", paymentQR.id);
 
     // data.paymentScreenshot is an array of files from FileUpload
     if (data.paymentScreenshot && data.paymentScreenshot[0]) {
@@ -189,7 +230,7 @@ export default function RegisterPage() {
     return (
       <div className="min-h-screen bg-neutral-950 flex flex-col items-center justify-center relative w-full overflow-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar">
         <div
-          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+          className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-50 pointer-events-none"
           style={{ backgroundImage: `url('/BG.jpg')` }}
         />
         <ScrollProgress className="top-0" />
@@ -341,7 +382,7 @@ export default function RegisterPage() {
       className="h-screen bg-neutral-950 flex flex-col items-center relative w-full overflow-y-auto overflow-x-hidden py-12 px-4 sm:px-6 lg:px-8 no-scrollbar"
     >
       <div
-        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-20 pointer-events-none"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat w-full h-full opacity-50 pointer-events-none"
         style={{ backgroundImage: `url('/BG.jpg')` }}
       />
 
@@ -453,7 +494,60 @@ export default function RegisterPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {!isDataLoaded ? (
+            <div className="space-y-6 animate-pulse">
+                <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                 <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                  <div className="h-10 bg-neutral-800 rounded w-full"></div>
+                   <div className="h-20 bg-neutral-800 rounded w-full"></div>
+            </div>
+          ) : !isRegistrationOpen ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-8 text-center">
+              <div className="flex justify-center">
+                <div className="bg-neutral-900/50 p-4 rounded-full border border-neutral-800">
+                  <CalendarX className="w-8 h-8 text-red-400/80" />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <h3 className="text-3xl font-bold font-nico text-red-400 tracking-tight">
+                  Online Applications Closed
+                </h3>
+                <div className="text-neutral-400 max-w-md mx-auto text-base leading-relaxed space-y-2">
+                  <p>
+                    Thank you for showing interest in SpaceUp Volume 7! Online registrations for the event are now closed.
+                  </p>
+                  <p className="text-yellow-400 font-medium">
+                    You can still register on the spot at the venue.
+                  </p>
+                  <p className="text-sm text-neutral-500">
+                     Please arrive early to secure your pass. We look forward to seeing you there!
+                  </p>
+                </div>
+                
+                <div className="pt-4 border-t border-neutral-800 w-full max-w-xs mx-auto">
+                    <p className="text-neutral-500 text-sm mb-1">
+                    For enquiries contact
+                    </p>
+                     <a
+                    href="mailto:spaceup@sedscusat.com"
+                    className="text-indigo-400 hover:text-indigo-300 transition-colors text-base"
+                  >
+                    spaceup@sedscusat.com
+                  </a>
+                </div>
+              </div>
+              
+              <div className="pt-2">
+                <Link href="/">
+                  <Button className="bg-white text-black hover:bg-neutral-200 font-semibold px-8 py-6 rounded-full text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
+                    Return to Home
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <input
               type="hidden"
               value={registrationAmount}
@@ -829,49 +923,63 @@ export default function RegisterPage() {
 
               <div className="flex flex-col items-center space-y-4">
                 {/* QR Code Image */}
-                <div className="w-full max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
-                  <img
-                    src="/mesac550sbi.jpeg"
-                    alt="Payment QR Code"
-                    className="w-full h-auto object-contain"
-                  />
-                </div>
+                {isLoadingQR ? (
+                  <div className="w-full max-w-[350px] aspect-square bg-neutral-800 rounded-lg animate-pulse flex items-center justify-center">
+                    <span className="text-neutral-500 text-sm">Loading QR...</span>
+                  </div>
+                ) : (
+                  <div className="w-full max-w-[350px] bg-white rounded-lg overflow-hidden relative border border-neutral-700">
+                    <img
+                      src={
+                        registrationAmount === ORIGINAL_REGISTRATION_AMOUNT
+                          ? paymentQR.qr_499_url
+                          : paymentQR.qr_449_url
+                      }
+                      alt="Payment QR Code"
+                      className="w-full h-auto object-contain"
+                    />
+                  </div>
+                )}
 
                 <div className="w-full text-center space-y-2">
                   <p className="text-sm text-neutral-400">
                     Scan QR Code or pay to UPI ID
                   </p>
-                  <div
-                    className="flex items-center justify-center gap-2 p-3 bg-black/50 rounded border border-neutral-800 cursor-pointer hover:border-neutral-600 transition-colors group"
-                    onClick={() => {
-                      navigator.clipboard.writeText("mesac550@sbi");
-                      // Simple feedback
-                      const el = document.getElementById("copy-feedback");
-                      if (el) {
-                        el.style.opacity = "1";
-                        setTimeout(() => el.style.opacity = "0", 2000);
-                      }
-                    }}
-                  >
-                    <code className="text-lg text-indigo-300 font-mono">
-                      mesac550@sbi
-                    </code>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-neutral-500 group-hover:text-white transition-colors"
+                  {isLoadingQR ? (
+                    <div className="h-12 w-full bg-neutral-800 rounded animate-pulse" />
+                  ) : (
+                    <div
+                      className="flex items-center justify-center gap-2 p-3 bg-black/50 rounded border border-neutral-800 cursor-pointer hover:border-neutral-600 transition-colors group"
+                      onClick={() => {
+                        navigator.clipboard.writeText(paymentQR.upi);
+                        // Simple feedback
+                        const el = document.getElementById("copy-feedback");
+                        if (el) {
+                          el.style.opacity = "1";
+                          setTimeout(() => (el.style.opacity = "0"), 2000);
+                        }
+                      }}
                     >
-                      <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                      <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                    </svg>
-                  </div>
+                      <code className="text-lg text-indigo-300 font-mono">
+                        {paymentQR.upi}
+                      </code>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-neutral-500 group-hover:text-white transition-colors"
+                      >
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+                      </svg>
+                    </div>
+                  )}
                   <p
                     id="copy-feedback"
                     className="text-xs text-green-400 opacity-0 transition-opacity duration-300"
@@ -961,6 +1069,7 @@ export default function RegisterPage() {
               </a>
             </p>
           </form>
+          )}
         </CardContent>
       </Card>
     </div>
